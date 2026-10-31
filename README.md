@@ -2,7 +2,7 @@
 
 Bu depo güncel Komuta Kontrol Merkezi frontend'ini, çalışan backend başlangıç paketini ve 8 VM / 7 ağ bölgesi için kurulum kaynaklarını bir araya getirmektedir. Amaç, aynı kaynaklardan tekrar üretilebilen bir tatbikat ortamı oluşturmaktır.
 
-**Sürüm:** v0.2.0-scaffold.1  
+**Sürüm:** v0.2.0-scaffold.2  
 **Durum:** Kaynak deposu ve altyapı hazırlığı. Canlı Proxmox, Wazuh ve yeni DMZ erişim zinciri henüz kurulmamıştır.
 
 ## İlk kullanım
@@ -27,9 +27,22 @@ Hazır frontend `dist/frontend/index.html` konumunda oluşur. Dağıtım ZIP'ind
 | backend/starter-v0.1 | Python/SQLite başlangıç motoru, CLI istemcileri ve Wazuh uygulama kuralları |
 | backend/next-api | FastAPI, PostgreSQL ve canlı veri geçişi için iş listesi ve API sözleşmesi |
 | infra | Topoloji, erişim politikası, örnek kurulum ayarları, Ansible ön kontrolü ve temel OS rolü |
+| scenarios/red-blue | İki takım için 16 bileşen, 10 kayıt kaynağı, 15 teknik/gözlem/müdahale aşaması ve boş kanıt şablonu |
 | docs | Güncel teknik gereksinimler, ağ/senaryo görseli, kurulum sırası ve kaynak durumu |
 | scripts | Derleme, doğrulama, envanter üretme ve paketleme araçları |
 | tests | Depo ve ağ yapılandırması kontrolleri |
+
+## Kırmızı takım ve mavi takım gereksinimleri
+
+İki takımın gereksinimleri artık ayrı belgelerde ve makine tarafından okunabilen ortak aşama planında bulunmaktadır:
+
+- [Senaryo dizini ve kapsamı](docs/scenarios/README.md)
+- [Kırmızı takım: araçlar, hedef koşulları, servis kimlikleri ve script durumu](docs/scenarios/red-team-requirements.md)
+- [Mavi takım: Wazuh, IOC/TTP analizi ve müdahale gereksinimleri](docs/scenarios/blue-team-requirements.md)
+- [Aşama / kanıt / müdahale / doğrulama çizelgesi](docs/scenarios/evidence-matrix.md)
+- [Uygulama ve prova kabul listesi](docs/scenarios/runbook.md)
+
+Ortak veri kaynağı `scenarios/red-blue/requirements.json` dosyasıdır. `make scenario-plan`, planı doğrular ve aşama çizelgesini yeniden üretir. Bu komut saldırı veya müdahale çalıştırmaz. Tamamlanmamış kaynaklar çizelgede açıkça belirtilmektedir.
 
 ## Ağ planı
 

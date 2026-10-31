@@ -1,0 +1,919 @@
+{
+  "schema": "kalkan.exercise-requirements.v1",
+  "id": "K1-RED-BLUE-01",
+  "status": "requirements_only",
+  "live_ready": false,
+  "topology": "infra/topology.json",
+  "presentation": {
+    "stage_count": 10,
+    "stage_seconds": 30,
+    "access_chain_stage": 1,
+    "pause_for_evidence": true,
+    "timer_implies_attack_success": false
+  },
+  "profiles": {
+    "normal": {
+      "vulnerable_service": false,
+      "unsafe_sudo": false,
+      "legacy_private_key_on_dmz": false,
+      "interactive_sync_ssh": false,
+      "extra_api_write_permissions": false,
+      "persistence_key_present_at_start": false
+    },
+    "exercise": {
+      "vulnerable_service": true,
+      "unsafe_sudo": true,
+      "legacy_private_key_on_dmz": true,
+      "interactive_sync_ssh": true,
+      "extra_api_write_permissions": true,
+      "persistence_key_present_at_start": false
+    },
+    "restored": {
+      "vulnerable_service": false,
+      "unsafe_sudo": false,
+      "legacy_private_key_on_dmz": false,
+      "interactive_sync_ssh": false,
+      "extra_api_write_permissions": false,
+      "persistence_key_present_at_start": false
+    }
+  },
+  "profile_note": "Bu ek koşullar topology.json profilinin üzerine gereksinimdir; uygulanmış Ansible rolü değildir.",
+  "components": [
+    {
+      "id": "red-toolchain",
+      "owner": "red",
+      "hosts": [
+        "KALI-RED-01",
+        "DMZ-PORTAL-01"
+      ],
+      "status": "planned",
+      "requires": [],
+      "requirement": "Kali, Python/curl, OpenSSH ve sürümü/hash değerleri sabitlenmiş Ligolo proxy/ajanı."
+    },
+    {
+      "id": "dmz-service",
+      "owner": "red",
+      "hosts": [
+        "DMZ-PORTAL-01"
+      ],
+      "status": "blocked_selection",
+      "requires": [],
+      "requirement": "Ürün/sürüm/CVE veya açıkça tanımlanmış lab zafiyeti; düşük yetkili svc-web; sağlıklı ve zafiyetli imaj."
+    },
+    {
+      "id": "sudo-lab",
+      "owner": "red",
+      "hosts": [
+        "DMZ-PORTAL-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "dmz-service"
+      ],
+      "requirement": "Tatbikat profilindeki yerel sudo hatası; UID/eUID ve süreç kanıtı."
+    },
+    {
+      "id": "lab-ssh-identity",
+      "owner": "shared",
+      "hosts": [
+        "DMZ-PORTAL-01",
+        "KKBS-INT-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "sudo-lab"
+      ],
+      "requirement": "Her tur için ayrı svc-sync anahtarı; DMZ root-only eski anahtar dosyası; INT kabul/iptal ve kalıcılık temizliği."
+    },
+    {
+      "id": "pivot-path",
+      "owner": "red",
+      "hosts": [
+        "DMZ-PORTAL-01",
+        "KALI-RED-01",
+        "FW-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "red-toolchain"
+      ],
+      "requirement": "Yalnız exercise profilindeki DMZ→Kali TCP 11601; proxy TUN yetkisi; TLS parmak izi."
+    },
+    {
+      "id": "legacy-ssh-path",
+      "owner": "shared",
+      "hosts": [
+        "FW-01",
+        "KKBS-INT-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "lab-ssh-identity",
+        "pivot-path"
+      ],
+      "requirement": "Yalnız exercise profilinde DMZ→INT TCP 22 ve svc-sync etkileşimli SSH; kaynak adresi korunur."
+    },
+    {
+      "id": "integrator-live-api",
+      "owner": "shared",
+      "hosts": [
+        "KKBS-INT-01",
+        "KKBS-APP-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "legacy-ssh-path"
+      ],
+      "requirement": "SSH kimliğinden ayrı API kimliği; normalde ingest-only, exercise profilinde açıkça tanımlanmış fazla yetki."
+    },
+    {
+      "id": "ot-live-model",
+      "owner": "shared",
+      "hosts": [
+        "OT-SIM-01",
+        "KKBS-APP-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "integrator-live-api"
+      ],
+      "requirement": "31 kaynak, bağımsız referans, komut/ölçüm ayrımı, drone/telsiz/görev model olayları ve güncel frontend canlı bağlantısı."
+    },
+    {
+      "id": "model-starter",
+      "owner": "shared",
+      "hosts": [
+        "KKBS-APP-01"
+      ],
+      "status": "existing_model",
+      "requires": [],
+      "source_paths": [
+        "backend/starter-v0.1/engine.py",
+        "backend/starter-v0.1/tools/red.py",
+        "backend/starter-v0.1/tools/blue.py"
+      ],
+      "requirement": "Mevcut kontrollü uygulama etkileri ve contain/restore/verify; gerçek erişim zinciri değildir."
+    },
+    {
+      "id": "wazuh-platform",
+      "owner": "blue",
+      "hosts": [
+        "WAZUH-01"
+      ],
+      "status": "planned",
+      "requires": [],
+      "requirement": "Uyumlu manager/indexer/dashboard, altı ajan, manager öz izleme, saat eşitlemesi ve saklama ayarı."
+    },
+    {
+      "id": "host-network-collection",
+      "owner": "blue",
+      "hosts": [
+        "FW-01",
+        "DMZ-PORTAL-01",
+        "KKBS-INT-01",
+        "KKBS-APP-01",
+        "OT-SIM-01",
+        "MGMT-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "wazuh-platform"
+      ],
+      "requirement": "Web/exec/sudo/read audit, SSH/FIM, izin/engelleme/NAT kayıtları; hedefli toplama ve örnek doğrulaması."
+    },
+    {
+      "id": "existing-app-rules",
+      "owner": "blue",
+      "hosts": [
+        "WAZUH-01"
+      ],
+      "status": "existing_source_unverified_live",
+      "requires": [],
+      "source_paths": [
+        "backend/starter-v0.1/wazuh/kalkan_rules.xml",
+        "backend/starter-v0.1/tools/test_wazuh.py"
+      ],
+      "requirement": "110101–110112 mevcut uygulama kuralları; gerçek manager ve uçtan uca teslim testi henüz yapılmamıştır."
+    },
+    {
+      "id": "new-host-network-rules",
+      "owner": "blue",
+      "hosts": [
+        "WAZUH-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "host-network-collection"
+      ],
+      "requirement": "Web→shell, sudo, anahtar okuma, pivot, SSH ve kalıcılık için pozitif/negatif gerçek kayıt testleri; kural ID çakışma kontrolü."
+    },
+    {
+      "id": "ioc-ttp-analysis",
+      "owner": "blue",
+      "hosts": [
+        "WAZUH-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "new-host-network-rules"
+      ],
+      "requirement": "Kanıt referanslı IOC/gözlem ayrımı, ATT&CK eşlemesi, güven düzeyi, alternatif açıklama ve temkinli APT benzerliği."
+    },
+    {
+      "id": "host-network-response",
+      "owner": "blue",
+      "hosts": [
+        "FW-01",
+        "DMZ-PORTAL-01",
+        "KKBS-INT-01",
+        "KKBS-APP-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "ioc-ttp-analysis"
+      ],
+      "requirement": "Analist onaylı anahtar/oturum iptali, tünel ve eski SSH yolunu kapatma, süreç sonlandırma, sudo/API yetki düzeltmesi."
+    },
+    {
+      "id": "restore-live-verify",
+      "owner": "blue",
+      "hosts": [
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "status": "planned",
+      "requires": [
+        "host-network-response",
+        "ot-live-model"
+      ],
+      "requirement": "Onaylı kayıt ve reçete geri yükleme, yeni ölçüm, tekrar erişim ret testi, kanıt koruma ve yeni run_id."
+    }
+  ],
+  "log_sources": [
+    {
+      "id": "dmz-web",
+      "host": "DMZ-PORTAL-01",
+      "kind": "web",
+      "collector": "Wazuh logcollector",
+      "requirements": "Gerçek TCP kaynağı, istek kimliği, URI, zaman ve durum; güvenilmeyen proxy başlığı kaynak sayılmaz."
+    },
+    {
+      "id": "dmz-exec",
+      "host": "DMZ-PORTAL-01",
+      "kind": "auditd",
+      "collector": "Linux Audit + Wazuh",
+      "requirements": "PID/PPID, uid/euid, auid mevcutsa, çalıştırılan dosya ve sonuç."
+    },
+    {
+      "id": "dmz-sudo",
+      "host": "DMZ-PORTAL-01",
+      "kind": "sudo/auditd",
+      "collector": "Kimlik ve Linux Audit kayıtları",
+      "requirements": "Yerel yetki değişimi ile komut/süreç ilişkisinin birlikte görünmesi."
+    },
+    {
+      "id": "key-read",
+      "host": "DMZ-PORTAL-01",
+      "kind": "auditd read",
+      "collector": "Hedefli Linux Audit",
+      "requirements": "Özel anahtar yoluna başarılı/başarısız okuma, etkin kullanıcı ve süreç; FIM tek başına yetmez."
+    },
+    {
+      "id": "fw-connections",
+      "host": "FW-01",
+      "kind": "firewall",
+      "collector": "nftables izin/ret ve bağlantı/NAT kaydı",
+      "requirements": "Kaynak/hedef IP, port, kural ve eylem; DNAT ve açık bağlantı durumu ayrı doğrulanır."
+    },
+    {
+      "id": "int-ssh",
+      "host": "KKBS-INT-01",
+      "kind": "sshd",
+      "collector": "Kimlik doğrulama günlüğü",
+      "requirements": "Kaynak DMZ adresi, svc-sync, publickey parmak izi ve oturum."
+    },
+    {
+      "id": "int-fim",
+      "host": "KKBS-INT-01",
+      "kind": "FIM who-data",
+      "collector": "Wazuh FIM / audit",
+      "requirements": "authorized_keys değişikliği, süreç, kullanıcı ve yeni anahtar parmak izi; içerikteki sırlar taşınmaz."
+    },
+    {
+      "id": "integration-events",
+      "host": "KKBS-INT-01",
+      "kind": "json",
+      "collector": "Servis JSON kaydı",
+      "requirements": "Servis kimliği, istek referansı, hedef API ve sonuç."
+    },
+    {
+      "id": "app-events",
+      "host": "KKBS-APP-01",
+      "kind": "json",
+      "collector": "Mevcut/yeni uygulama JSON akışı",
+      "requirements": "run_id, olay sırası, aktör, oturum, varlık, değişiklik ve kabul/ret."
+    },
+    {
+      "id": "ot-reference",
+      "host": "OT-SIM-01",
+      "kind": "json",
+      "collector": "OT model JSON akışı",
+      "requirements": "Bağımsız konum/görev/ölçüm, komut tepkisi ve paket/veri yaşı."
+    }
+  ],
+  "phases": [
+    {
+      "id": "B00",
+      "title": "Başlangıç ve kayıt sağlığı",
+      "presentation_stage": 0,
+      "hosts": [
+        "FW-01",
+        "WAZUH-01",
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "wazuh-platform",
+        "host-network-collection"
+      ],
+      "log_sources": [
+        "fw-connections",
+        "app-events",
+        "ot-reference"
+      ],
+      "script": null,
+      "implementation_status": "planned",
+      "entry_condition": "Normal profil, yeni run_id ve saat/kayıt kaynağı kontrolü.",
+      "observables": [
+        "Onaylı konum/görev/reçete",
+        "Ajan durumu ve kaynak zamanları"
+      ],
+      "blue_response": "Başlangıç kaydını, normal iş akışını ve yasak yolları doğrulama.",
+      "verification": "Eksik kayıt kaynağı bulunmamalı; normal veri ve izleyici rolü çalışmalıdır.",
+      "techniques": [],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R01",
+      "title": "DMZ servisinden ilk erişim",
+      "presentation_stage": 1,
+      "hosts": [
+        "KALI-RED-01",
+        "FW-01",
+        "DMZ-PORTAL-01"
+      ],
+      "requires": [
+        "red-toolchain",
+        "dmz-service",
+        "new-host-network-rules"
+      ],
+      "log_sources": [
+        "dmz-web",
+        "dmz-exec",
+        "fw-connections"
+      ],
+      "script": {
+        "name": "01_dmz_service_rce.py",
+        "path": null,
+        "command": null,
+        "status": "planned"
+      },
+      "implementation_status": "planned",
+      "entry_condition": "Seçilmiş zafiyetli servis ve yalnız DMZ HTTPS yayını.",
+      "observables": [
+        "Dış kaynak IP",
+        "İstek kimliği",
+        "svc-web",
+        "Shell sürecinin PID/PPID değeri"
+      ],
+      "blue_response": "Web isteğini servis→shell zinciriyle doğrulama; DMZ hizmetini daraltma/yama.",
+      "verification": "İlk shell svc-web olmalı; iyileştirilmiş serviste aynı ilk erişim tekrarlanamamalıdır.",
+      "techniques": [
+        "T1190"
+      ],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R02",
+      "title": "DMZ yerel yetki yükseltme",
+      "presentation_stage": 1,
+      "hosts": [
+        "DMZ-PORTAL-01"
+      ],
+      "requires": [
+        "sudo-lab",
+        "new-host-network-rules"
+      ],
+      "log_sources": [
+        "dmz-exec",
+        "dmz-sudo"
+      ],
+      "script": {
+        "name": "02_dmz_privilege_escalation.py",
+        "path": null,
+        "command": null,
+        "status": "planned"
+      },
+      "implementation_status": "planned",
+      "entry_condition": "R01 kanıtı ve exercise profilindeki hatalı sudo.",
+      "observables": [
+        "Gerçek/etkin UID",
+        "Komut ve üst süreç",
+        "Sudo olay referansı"
+      ],
+      "blue_response": "Hatalı sudo yetkisini kaldırma ve ilgili oturumu sınırlandırma.",
+      "verification": "Aynı yolla svc-web→euid=0 geçişi artık başarısız olmalıdır.",
+      "techniques": [
+        "T1548.003"
+      ],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R03",
+      "title": "Eski servis anahtarına erişim",
+      "presentation_stage": 1,
+      "hosts": [
+        "DMZ-PORTAL-01"
+      ],
+      "requires": [
+        "lab-ssh-identity",
+        "new-host-network-rules"
+      ],
+      "log_sources": [
+        "key-read",
+        "dmz-exec"
+      ],
+      "script": {
+        "name": "03_service_key_access.py",
+        "path": null,
+        "command": null,
+        "status": "planned"
+      },
+      "implementation_status": "planned",
+      "entry_condition": "R02 kanıtı ve root-only eski svc-sync özel anahtarı.",
+      "observables": [
+        "Dosya yolu",
+        "Okuyan süreç ve etkin kullanıcı",
+        "Anahtar parmak izi"
+      ],
+      "blue_response": "Anahtar ilişkisinin doğrulanması ve hedefte eski anahtarın iptali/yenilenmesi.",
+      "verification": "İlk düşük yetki anahtarı okuyamamalı; iptal edilen anahtarla yeni SSH açılamamalıdır.",
+      "techniques": [
+        "T1552.004"
+      ],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R04",
+      "title": "DMZ üzerinden pivot kanalı",
+      "presentation_stage": 1,
+      "hosts": [
+        "DMZ-PORTAL-01",
+        "KALI-RED-01",
+        "FW-01"
+      ],
+      "requires": [
+        "pivot-path",
+        "new-host-network-rules"
+      ],
+      "log_sources": [
+        "dmz-exec",
+        "fw-connections"
+      ],
+      "script": {
+        "name": "04_pivot_channel.py",
+        "path": null,
+        "command": null,
+        "status": "planned"
+      },
+      "implementation_status": "planned",
+      "entry_condition": "R01 sonrası DMZ kod yürütme; exercise çıkış izni ve Kali TUN yetkisi.",
+      "observables": [
+        "Ajan dosya SHA256 değeri",
+        "Süreç",
+        "DMZ→Kali TCP/TLS akışı"
+      ],
+      "blue_response": "Ajan süreci ve dış bağlantıyı ilişkilendirme; tüneli ve mevcut bağlantı durumunu kesme.",
+      "verification": "Yeni ve mevcut tünel üzerinden erişim bitmeli; izinli iş akışı ayrıca sınanmalıdır.",
+      "techniques": [
+        "T1090"
+      ],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R05",
+      "title": "İç entegrasyon sunucusuna SSH",
+      "presentation_stage": 1,
+      "hosts": [
+        "DMZ-PORTAL-01",
+        "KKBS-INT-01",
+        "FW-01"
+      ],
+      "requires": [
+        "legacy-ssh-path",
+        "new-host-network-rules"
+      ],
+      "log_sources": [
+        "int-ssh",
+        "fw-connections"
+      ],
+      "script": {
+        "name": "05_lateral_ssh.py",
+        "path": null,
+        "command": null,
+        "status": "planned"
+      },
+      "implementation_status": "planned",
+      "entry_condition": "Kullanılabilir svc-sync anahtarı, pivot, eski SSH yolu ve etkileşimli oturum izni.",
+      "observables": [
+        "Kaynak DMZ IP",
+        "svc-sync",
+        "Publickey parmak izi",
+        "SSH oturumu"
+      ],
+      "blue_response": "Eski SSH istisnasını kapatma, anahtarı iptal etme ve açık saldırgan oturumunu sonlandırma.",
+      "verification": "Eski anahtarla yeni oturum açılamamalı; önceki açık oturum da bitmelidir.",
+      "techniques": [
+        "T1021.004"
+      ],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R06",
+      "title": "SSH kalıcılığı ve uygulama kimliği",
+      "presentation_stage": 1,
+      "hosts": [
+        "KKBS-INT-01",
+        "KKBS-APP-01"
+      ],
+      "requires": [
+        "lab-ssh-identity",
+        "integrator-live-api",
+        "new-host-network-rules"
+      ],
+      "log_sources": [
+        "int-fim",
+        "int-ssh",
+        "integration-events",
+        "app-events"
+      ],
+      "script": {
+        "name": "06_persistence.py",
+        "path": null,
+        "command": null,
+        "status": "planned"
+      },
+      "implementation_status": "planned",
+      "entry_condition": "svc-sync SSH oturumu, yazılabilir kullanıcı authorized_keys ve ayrı uygulama kimliği.",
+      "observables": [
+        "Eklenen genel anahtar parmak izi",
+        "FIM olayı",
+        "Yeni SSH ve API oturumu"
+      ],
+      "blue_response": "Kalıcılık anahtarını kaldırma, oturumları iptal etme ve fazla API yetkisini daraltma.",
+      "verification": "Eklenen anahtar yeniden giriş sağlayamamalı; API yazma yetkisi ayrı reddedilmelidir.",
+      "techniques": [
+        "T1098.004"
+      ],
+      "existing_rule_ids": []
+    },
+    {
+      "id": "R07",
+      "title": "Konum manipülasyonu",
+      "presentation_stage": 2,
+      "hosts": [
+        "KKBS-INT-01",
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "model-starter",
+        "integrator-live-api",
+        "ot-live-model",
+        "existing-app-rules"
+      ],
+      "log_sources": [
+        "integration-events",
+        "app-events",
+        "ot-reference"
+      ],
+      "script": {
+        "name": "red.py",
+        "path": "backend/starter-v0.1/tools/red.py",
+        "command": "position",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Canlı modda doğrulanmış uygulama kimliği ve fazla yazma yetkisi.",
+      "observables": [
+        "Uygulama hesabı/oturumu",
+        "Değişen varlık",
+        "Konum farkı: anomali ölçümü"
+      ],
+      "blue_response": "Kaynağı/oturumu doğrulama, yazmayı durdurma ve onaylı konumu geri yükleme.",
+      "verification": "Yeni ölçüm bağımsız referansla uyuşmalı; eski oturumla tekrar yazma reddedilmelidir.",
+      "techniques": [
+        "T1565.001 (yalnız depolanmış veri kanıtlanırsa)"
+      ],
+      "existing_rule_ids": [
+        110102
+      ]
+    },
+    {
+      "id": "R08",
+      "title": "Görev manipülasyonu",
+      "presentation_stage": 3,
+      "hosts": [
+        "KKBS-INT-01",
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "model-starter",
+        "integrator-live-api",
+        "ot-live-model",
+        "existing-app-rules"
+      ],
+      "log_sources": [
+        "integration-events",
+        "app-events",
+        "ot-reference"
+      ],
+      "script": {
+        "name": "red.py",
+        "path": "backend/starter-v0.1/tools/red.py",
+        "command": "mission",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Canlı modda R06 kimlik/yetki koşulu ve onaylı görev referansı.",
+      "observables": [
+        "Kaynak hesap/oturum",
+        "Önceki ve yeni görev",
+        "İstek/olay referansı"
+      ],
+      "blue_response": "Görev yazma yetkisini kaldırma ve onaylı görevi geri yükleme.",
+      "verification": "Yeni görev/rota davranışı onaylı kayıtla uyuşmalıdır.",
+      "techniques": [
+        "T1565.001 (yalnız depolanmış veri kanıtlanırsa)"
+      ],
+      "existing_rule_ids": [
+        110103
+      ]
+    },
+    {
+      "id": "R09",
+      "title": "HMI ölçüm manipülasyonu",
+      "presentation_stage": 4,
+      "hosts": [
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "model-starter",
+        "integrator-live-api",
+        "ot-live-model",
+        "existing-app-rules"
+      ],
+      "log_sources": [
+        "app-events",
+        "ot-reference"
+      ],
+      "script": {
+        "name": "red.py",
+        "path": "backend/starter-v0.1/tools/red.py",
+        "command": "plc-measurement",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Bildirilen HMI ölçümü ve bağımsız proses ölçümü ayrı olmalıdır.",
+      "observables": [
+        "Değişikliği yapan hesap",
+        "HMI ve referans farkı",
+        "Tesis varlığı"
+      ],
+      "blue_response": "HMI veri yazmasını durdurma, ölçüm kaynağını ve bağımsız referansı doğrulama.",
+      "verification": "Bildirilen değer yeni bağımsız ölçümle uyuşmalı; alarm yalnız gizlenmemelidir.",
+      "techniques": [
+        "T0832"
+      ],
+      "existing_rule_ids": [
+        110104
+      ]
+    },
+    {
+      "id": "R10",
+      "title": "Proses parametresi değişikliği",
+      "presentation_stage": 5,
+      "hosts": [
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "model-starter",
+        "integrator-live-api",
+        "ot-live-model",
+        "existing-app-rules"
+      ],
+      "log_sources": [
+        "app-events",
+        "ot-reference"
+      ],
+      "script": {
+        "name": "red.py",
+        "path": "backend/starter-v0.1/tools/red.py",
+        "command": "plc-command",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Komut kimliği/yetkisi ve gerçek OT model komut kanalı.",
+      "observables": [
+        "Komutu veren hesap",
+        "Hedef/parametre",
+        "Model kabulü ve proses tepkisi"
+      ],
+      "blue_response": "Yetkisiz kumandayı engelleme, oturumu iptal etme ve onaylı reçeteyi geri yükleme.",
+      "verification": "Komut reddi ve prosesin yeni ölçümlerle kararlı duruma gelmesi birlikte doğrulanmalıdır.",
+      "techniques": [
+        "T0836"
+      ],
+      "existing_rule_ids": [
+        110105
+      ]
+    },
+    {
+      "id": "R11",
+      "title": "Görünürlük kaybı ve saha sonuçları",
+      "presentation_stage": 6,
+      "hosts": [
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "model-starter",
+        "integrator-live-api",
+        "ot-live-model",
+        "existing-app-rules"
+      ],
+      "log_sources": [
+        "app-events",
+        "ot-reference"
+      ],
+      "script": {
+        "name": "red.py",
+        "path": "backend/starter-v0.1/tools/red.py",
+        "command": "outage",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Kesinti yolu ve varlık bazlı drone/görev/telsiz model olayları hazırlanmalıdır.",
+      "observables": [
+        "Son gerçek paket zamanı",
+        "Kaynak ve oturum",
+        "Varlık bazlı kesinti/model olayı"
+      ],
+      "blue_response": "Kesintinin kaynağını durdurma, bağımsız kaynağı kontrol etme ve izinli veri yolunu geri açma.",
+      "verification": "Yeni paket alınmalı; son değer donması doğru olmalı; animasyonlar gerçek model olayına dayanmalıdır.",
+      "techniques": [
+        "T0815 (HMI görünürlük kaybı için)"
+      ],
+      "existing_rule_ids": [
+        110106
+      ]
+    },
+    {
+      "id": "B12",
+      "title": "IOC/TTP incelemesi ve sınırlandırma",
+      "presentation_stage": 7,
+      "hosts": [
+        "WAZUH-01",
+        "FW-01",
+        "DMZ-PORTAL-01",
+        "KKBS-INT-01",
+        "KKBS-APP-01"
+      ],
+      "requires": [
+        "ioc-ttp-analysis",
+        "host-network-response",
+        "model-starter"
+      ],
+      "log_sources": [
+        "dmz-web",
+        "dmz-exec",
+        "key-read",
+        "fw-connections",
+        "int-ssh",
+        "int-fim",
+        "app-events"
+      ],
+      "script": {
+        "name": "blue.py",
+        "path": "backend/starter-v0.1/tools/blue.py",
+        "command": "contain",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Analist tarafından doğrulanmış kayıt/alarm ve saldırı zaman çizelgesi.",
+      "observables": [
+        "Kanıt referanslı IOC listesi",
+        "Gözlenen TTP zinciri",
+        "İptal/engelleme işlem sonucu"
+      ],
+      "blue_response": "Servis/anahtar/açık oturum/pivot/SSH/API kontrollerini olay bağlamına göre uygulama.",
+      "verification": "Her kontrol ayrı sonuç vermeli; açık kanal kalmamalı; eski bulgular korunmalıdır.",
+      "techniques": [],
+      "existing_rule_ids": [
+        110107
+      ]
+    },
+    {
+      "id": "B13",
+      "title": "Kalıcılık temizliği ve geri yükleme",
+      "presentation_stage": 8,
+      "hosts": [
+        "DMZ-PORTAL-01",
+        "KKBS-INT-01",
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "host-network-response",
+        "restore-live-verify",
+        "model-starter"
+      ],
+      "log_sources": [
+        "dmz-sudo",
+        "int-fim",
+        "app-events",
+        "ot-reference"
+      ],
+      "script": {
+        "name": "blue.py",
+        "path": "backend/starter-v0.1/tools/blue.py",
+        "command": "restore",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Sınırlandırma kanıtı ve onaylı yapılandırma/veri referansı.",
+      "observables": [
+        "Yama ve yetki değişikliği",
+        "Kaldırılan anahtar parmak izi",
+        "Geri yüklenen kayıtlar"
+      ],
+      "blue_response": "Servis/sudo/API yanlış yapılandırmalarını düzeltme, kalıcılığı temizleme ve onaylı kayıtları geri yükleme.",
+      "verification": "Tekrar erişim başarısız olmalı; yeni konum/görev/ölçüm onaylı referansla uyuşmalıdır.",
+      "techniques": [],
+      "existing_rule_ids": [
+        110108
+      ]
+    },
+    {
+      "id": "B14",
+      "title": "Kararlılık, rapor ve temiz tur",
+      "presentation_stage": 9,
+      "hosts": [
+        "WAZUH-01",
+        "KKBS-APP-01",
+        "OT-SIM-01"
+      ],
+      "requires": [
+        "restore-live-verify",
+        "ioc-ttp-analysis",
+        "model-starter"
+      ],
+      "log_sources": [
+        "app-events",
+        "ot-reference",
+        "int-ssh",
+        "fw-connections"
+      ],
+      "script": {
+        "name": "blue.py",
+        "path": "backend/starter-v0.1/tools/blue.py",
+        "command": "verify",
+        "status": "model_only"
+      },
+      "implementation_status": "model_only",
+      "entry_condition": "Yeni veriyle kararlılık, tekrar erişim ret testi ve korunmuş olay kanıtı.",
+      "observables": [
+        "Ölçülmüş süreler",
+        "Kontrol sonuçları",
+        "IOC/TTP güven düzeyi",
+        "Yeni run_id"
+      ],
+      "blue_response": "Bağlantı/bütünlük/hizmet doğrulaması; kanıtı koruma; yeterli kanıt yoksa APT atfı yapmama.",
+      "verification": "Eski anahtar/oturumlar çalışmamalı; önceki kanıt korunmalı; yeni temiz tur bağımsız açılmalıdır.",
+      "techniques": [],
+      "existing_rule_ids": [
+        110109
+      ]
+    }
+  ],
+  "blockers": [
+    "Zafiyetli servis ürünü/sürümü ve doğrulanmış zafiyet koşulu seçilmelidir.",
+    "İlk altı erişim zinciri scripti henüz yazılmamıştır.",
+    "Canlı Wazuh, ajanlar ve yeni host/ağ korelasyonları kurulup doğrulanmalıdır.",
+    "SSH servis kimliği, yeni API, OT modeli ve güncel frontend canlı bağlantısı tamamlanmalıdır.",
+    "OS/ağ müdahale ve temiz tur işlemleri gerçek sistemlerde doğrulanmalıdır."
+  ]
+}

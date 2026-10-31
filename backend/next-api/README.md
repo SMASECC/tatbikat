@@ -2,6 +2,8 @@
 
 Hedef teknoloji Python 3.12, FastAPI/Uvicorn, PostgreSQL 16 ve WebSocket'tir. Bu dizin API uygulaması değildir; üzerinde uzlaşılan geliştirme sözleşmesini taşımaktadır.
 
+Kırmızı/mavi takımın aşama ve kimlik bağımlılıkları `docs/scenarios/` ve `scenarios/red-blue/requirements.json` içindedir. SSH hesabı → ayrı integrator kimliği → API yetkisi ilişkisi, OS/ağ müdahalesi ve varlık bazlı drone/telsiz/görev model olayları bu sözleşmeyle birlikte geliştirilmelidir.
+
 1. Kimlikler: viewer, operator, integrator, blue ve white; API tarafında rol denetimi ve iptal edilebilir oturum.
 2. Ortak durum: run_id, event_seq, revision, kaynak ölçüm zamanı ve sunucunun kabul zamanı.
 3. Veri kabulü: OT modelinden telemetri ve bağımsız referans; entegrasyon işçisinden doğrulanan kayıtlar.

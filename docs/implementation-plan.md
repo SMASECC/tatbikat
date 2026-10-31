@@ -4,6 +4,7 @@
 |---|---|---|
 | 1 | Güncel frontend ve backend başlangıç kaynaklarını tek Git deposunda toplama | Bu paket |
 | 2 | Tek topoloji kaynağı, envanter üretimi, doğrulama ve kaynak testleri | Bu paket |
+| 2a | Kırmızı/mavi takım bileşenleri, script durumu, kanıt ve müdahale gereksinimleri | scaffold.2 içinde tanımlandı; docs/scenarios ve scenarios/red-blue |
 | 3 | Gerçek host node, storage, template, NIC/bridge ve kapasite eşlemesi | Kullanıcı ortamı bilgileri beklenmektedir |
 | 4 | VM klonlama ve ilk ağ uygulaması rolü | Geliştirilecek |
 | 5 | Wazuh merkezi kurulum ve ajan kaydı | Geliştirilecek |

@@ -23,7 +23,8 @@ def main():
         raise SystemExit("Node.js 22 veya üzeri gerekmektedir.")
     steps = [([sys.executable, "frontend/build.py"], ROOT),
              ([sys.executable, "scripts/validate_repo.py", "--require-build"], ROOT),
-             ([sys.executable, "scripts/render_infra.py"], ROOT)]
+             ([sys.executable, "scripts/render_infra.py"], ROOT),
+             ([sys.executable, "scripts/scenario_plan.py", "--check"], ROOT)]
     steps += [(["node", f"frontend/check-{name}.cjs"], ROOT) for name in ("controls", "show", "analyst", "session", "audio", "broadcast", "dmz")]
     steps += [([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"], ROOT),
               ([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"], ROOT / "backend/starter-v0.1")]

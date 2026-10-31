@@ -1,0 +1,75 @@
+{
+  "schema": "kalkan.evidence-template.v1",
+  "case_id": null,
+  "run_id": null,
+  "status": "blank_template_not_evidence",
+  "time_window_utc": {
+    "start": null,
+    "end": null
+  },
+  "analyst": null,
+  "observables": [],
+  "ioc_records": [],
+  "ttp_assessments": [],
+  "evidence_references": [],
+  "responses": [],
+  "verification_results": [],
+  "attribution": {
+    "assessment": "not_assessed",
+    "candidate_group": null,
+    "confidence": null,
+    "supporting_evidence": [],
+    "alternative_explanations": [],
+    "imitation_possible": true
+  },
+  "record_fields": {
+    "observable": [
+      "type",
+      "value",
+      "asset",
+      "first_seen_utc",
+      "last_seen_utc",
+      "evidence_ref",
+      "classification",
+      "confidence",
+      "rationale"
+    ],
+    "ttp": [
+      "technique_id",
+      "observed_behavior",
+      "evidence_refs",
+      "confidence",
+      "alternative_explanation"
+    ],
+    "evidence": [
+      "source_host",
+      "source_record_id",
+      "file_path",
+      "sha256",
+      "collected_at_utc",
+      "run_correlation_basis"
+    ],
+    "response": [
+      "control",
+      "operator",
+      "approved_at_utc",
+      "target",
+      "outcome",
+      "evidence_ref"
+    ],
+    "verification": [
+      "control",
+      "new_attempt_or_measurement",
+      "expected_result",
+      "observed_result",
+      "timestamp_utc",
+      "evidence_ref"
+    ]
+  },
+  "excluded_data": [
+    "password",
+    "private_key",
+    "bearer_token",
+    "session_cookie"
+  ]
+}

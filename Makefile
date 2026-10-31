@@ -1,12 +1,14 @@
 PYTHON ?= python3
 ANSIBLE_PLAYBOOK ?= $(if $(wildcard .venv/bin/ansible-playbook),$(abspath .venv/bin/ansible-playbook),ansible-playbook)
 
-.PHONY: check plan frontend backend-check infra-syntax preflight base-os
+.PHONY: check plan scenario-plan frontend backend-check infra-syntax preflight base-os
 check:
 	$(PYTHON) scripts/check.py
 plan:
 	$(PYTHON) scripts/validate_repo.py
 	$(PYTHON) scripts/render_infra.py
+scenario-plan:
+	$(PYTHON) scripts/scenario_plan.py
 frontend:
 	$(PYTHON) frontend/build.py
 backend-check:
