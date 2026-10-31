@@ -1,0 +1,80 @@
+<group name="kalkan1,">
+  <rule id="110100" level="0">
+    <decoded_as>json</decoded_as>
+    <field name="app" type="pcre2">^kalkan1$</field>
+    <description>KALKAN-1 structured application events</description>
+  </rule>
+  <rule id="110101" level="8">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^auth\.session_opened$</field>
+    <field name="client_trusted" type="pcre2">^no$</field>
+    <description>KALKAN-1: untrusted lab command session / $(asset_id)</description>
+    <group>authentication_success,kalkan_session,</group>
+  </rule>
+  <rule id="110102" level="12">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^integrity\.position_mismatch$</field>
+    <description>KALKAN-1: reported position differs from independent reference / $(asset_id)</description>
+    <group>kalkan_integrity,kalkan_position,</group>
+  </rule>
+  <rule id="110103" level="12">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^integrity\.mission_mismatch$</field>
+    <description>KALKAN-1: mission differs from approved record / $(asset_id)</description>
+    <group>kalkan_integrity,kalkan_mission,</group>
+  </rule>
+  <rule id="110104" level="12">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^integrity\.measurement_mismatch$</field>
+    <description>KALKAN-1: LT-01 and independent LT-02 mismatch / $(asset_id)</description>
+    <group>kalkan_integrity,kalkan_plc,</group>
+  </rule>
+  <rule id="110105" level="13">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^process\.command_deviation$</field>
+    <description>KALKAN-1: unauthorized valve or thermal setpoint / $(asset_id)</description>
+    <group>kalkan_process,kalkan_plc,</group>
+  </rule>
+  <rule id="110106" level="12">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^telemetry\.link_timeout$</field>
+    <description>KALKAN-1: field telemetry or HMI delivery stopped / $(asset_id)</description>
+    <group>kalkan_availability,</group>
+  </rule>
+  <rule id="110107" level="5">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^response\.contained$</field>
+    <description>KALKAN-1: command session revoked and remote writes locked</description>
+    <group>kalkan_response,</group>
+  </rule>
+  <rule id="110108" level="5">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^response\.restored$</field>
+    <description>KALKAN-1: trusted records and process recipe restored; verification pending</description>
+    <group>kalkan_response,</group>
+  </rule>
+  <rule id="110109" level="5">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^response\.verified$</field>
+    <description>KALKAN-1: links, integrity and services stable for at least 8 seconds</description>
+    <group>kalkan_response,</group>
+  </rule>
+  <rule id="110110" level="8">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^access\.denied$</field>
+    <description>KALKAN-1: access denied / $(actor)</description>
+    <group>access_denied,kalkan_response,</group>
+  </rule>
+  <rule id="110111" level="3">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^operator\.command$</field>
+    <description>KALKAN-1: authorized local process command / $(asset_id)</description>
+    <group>kalkan_operator,</group>
+  </rule>
+  <rule id="110112" level="3">
+    <if_sid>110100</if_sid>
+    <field name="event_type" type="pcre2">^lab\.reset$</field>
+    <description>KALKAN-1: new run / $(run_id)</description>
+    <group>kalkan_audit,</group>
+  </rule>
+</group>

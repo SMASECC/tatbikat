@@ -1,0 +1,62 @@
+[
+  {
+    "line": 1,
+    "rule_id": 110112,
+    "event_type": "lab.reset"
+  },
+  {
+    "line": 2,
+    "rule_id": 110101,
+    "event_type": "auth.session_opened"
+  },
+  {
+    "line": 3,
+    "rule_id": 110102,
+    "event_type": "integrity.position_mismatch"
+  },
+  {
+    "line": 4,
+    "rule_id": 110103,
+    "event_type": "integrity.mission_mismatch"
+  },
+  {
+    "line": 5,
+    "rule_id": 110104,
+    "event_type": "integrity.measurement_mismatch"
+  },
+  {
+    "line": 6,
+    "rule_id": 110105,
+    "event_type": "process.command_deviation"
+  },
+  {
+    "line": 7,
+    "rule_id": 110106,
+    "event_type": "telemetry.link_timeout"
+  },
+  {
+    "line": 8,
+    "rule_id": 110107,
+    "event_type": "response.contained"
+  },
+  {
+    "line": 9,
+    "rule_id": 110108,
+    "event_type": "response.restored"
+  },
+  {
+    "line": 10,
+    "rule_id": 110109,
+    "event_type": "response.verified"
+  },
+  {
+    "line": 11,
+    "rule_id": 110110,
+    "event_type": "access.denied"
+  },
+  {
+    "line": 12,
+    "rule_id": 110111,
+    "event_type": "operator.command"
+  }
+]

@@ -1,0 +1,566 @@
+{
+  "schema": "kalkan.firewall-review.v1",
+  "application_status": "review_only",
+  "default_action": "deny",
+  "optional_gates": {
+    "reji_wazuh": false,
+    "agent_enrollment": false,
+    "soc_manager_api": false
+  },
+  "rules": [
+    {
+      "id": "external-portal",
+      "source": "host:KALI-RED-01",
+      "destination": "gateway:external",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "FW dış adresi üzerinden yalnız DMZ-PORTAL-01:443 DNAT yayını."
+    },
+    {
+      "id": "integration-pull",
+      "source": "host:KKBS-INT-01",
+      "destination": "host:DMZ-PORTAL-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Entegrasyon işçisi DMZ verisini HTTPS ile çeker."
+    },
+    {
+      "id": "integration-api",
+      "source": "host:KKBS-INT-01",
+      "destination": "host:KKBS-APP-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Kimlik doğrulamalı API; aynı L2 ağında VM ve guest firewall gerekir."
+    },
+    {
+      "id": "process-api",
+      "source": "host:KKBS-APP-01",
+      "destination": "host:OT-SIM-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "mTLS ile proses komutu ve bağımsız referans sorgusu."
+    },
+    {
+      "id": "telemetry-ingest",
+      "source": "host:OT-SIM-01",
+      "destination": "host:KKBS-APP-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "mTLS ile toplu telemetri gönderimi."
+    },
+    {
+      "id": "display-app",
+      "source": "zone:display",
+      "destination": "host:KKBS-APP-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "HTTPS/WSS; izleyici yalnız okur, reji ve operatör ayrı uygulama rolleridir."
+    },
+    {
+      "id": "blue-dashboard",
+      "source": "client:blue",
+      "destination": "host:WAZUH-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Mavi takım Wazuh Dashboard analizi."
+    },
+    {
+      "id": "blue-response",
+      "source": "client:blue",
+      "destination": "host:KKBS-APP-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Mavi takım rolü ile uygulama müdahalesi."
+    },
+    {
+      "id": "reji-dashboard",
+      "source": "client:reji",
+      "destination": "host:WAZUH-01",
+      "ports": [
+        443
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Reji Wazuh bağlantısı; kimlik doğrulaması korunur.",
+      "gate": "reji_wazuh"
+    },
+    {
+      "id": "proxmox-management",
+      "source": "host:MGMT-01",
+      "destination": "hypervisor",
+      "ports": [
+        8006
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Kısıtlı API tokenı ile Proxmox yönetimi."
+    },
+    {
+      "id": "vm-management",
+      "source": "host:MGMT-01",
+      "destination": "set:managed-vms",
+      "ports": [
+        22
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Ansible ve bakım erişimi; SSH anahtarı kurulumda ayrı sağlanır."
+    },
+    {
+      "id": "agent-events",
+      "source": "set:agent-vms",
+      "destination": "host:WAZUH-01",
+      "ports": [
+        1514
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Ajanların Wazuh olay aktarımı."
+    },
+    {
+      "id": "agent-enrollment",
+      "source": "set:agent-vms",
+      "destination": "host:WAZUH-01",
+      "ports": [
+        1515
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız ajan kaydı süresince.",
+      "gate": "agent_enrollment"
+    },
+    {
+      "id": "soc-manager-api",
+      "source": "client:blue",
+      "destination": "host:WAZUH-01",
+      "ports": [
+        55000
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Gerekli olduğunda SOC yönetim API erişimi.",
+      "gate": "soc_manager_api"
+    },
+    {
+      "id": "legacy-ssh",
+      "source": "host:DMZ-PORTAL-01",
+      "destination": "host:KKBS-INT-01",
+      "ports": [
+        22
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "exercise"
+      ],
+      "description": "Eski SFTP erişim istisnası; SSH kimlik doğrulaması ayrıca gereklidir."
+    },
+    {
+      "id": "pivot-egress",
+      "source": "host:DMZ-PORTAL-01",
+      "destination": "host:KALI-RED-01",
+      "ports": [
+        11601
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "exercise"
+      ],
+      "description": "Lab pivot uç noktası; genel internet çıkışı sağlamaz."
+    },
+    {
+      "id": "dns-tcp-mgmt",
+      "source": "zone:mgmt",
+      "destination": "gateway:mgmt",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-mgmt",
+      "source": "zone:mgmt",
+      "destination": "gateway:mgmt",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-mgmt",
+      "source": "zone:mgmt",
+      "destination": "gateway:mgmt",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    },
+    {
+      "id": "dns-tcp-dmz",
+      "source": "zone:dmz",
+      "destination": "gateway:dmz",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-dmz",
+      "source": "zone:dmz",
+      "destination": "gateway:dmz",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-dmz",
+      "source": "zone:dmz",
+      "destination": "gateway:dmz",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    },
+    {
+      "id": "dns-tcp-kkbs",
+      "source": "zone:kkbs",
+      "destination": "gateway:kkbs",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-kkbs",
+      "source": "zone:kkbs",
+      "destination": "gateway:kkbs",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-kkbs",
+      "source": "zone:kkbs",
+      "destination": "gateway:kkbs",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    },
+    {
+      "id": "dns-tcp-ot",
+      "source": "zone:ot",
+      "destination": "gateway:ot",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-ot",
+      "source": "zone:ot",
+      "destination": "gateway:ot",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-ot",
+      "source": "zone:ot",
+      "destination": "gateway:ot",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    },
+    {
+      "id": "dns-tcp-soc",
+      "source": "zone:soc",
+      "destination": "gateway:soc",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-soc",
+      "source": "zone:soc",
+      "destination": "gateway:soc",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-soc",
+      "source": "zone:soc",
+      "destination": "gateway:soc",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    },
+    {
+      "id": "dns-tcp-external",
+      "source": "zone:external",
+      "destination": "gateway:external",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-external",
+      "source": "zone:external",
+      "destination": "gateway:external",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-external",
+      "source": "zone:external",
+      "destination": "gateway:external",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    },
+    {
+      "id": "dns-tcp-display",
+      "source": "zone:display",
+      "destination": "gateway:display",
+      "ports": [
+        53
+      ],
+      "protocol": "tcp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "dns-udp-display",
+      "source": "zone:display",
+      "destination": "gateway:display",
+      "ports": [
+        53
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin iç DNS hizmeti."
+    },
+    {
+      "id": "ntp-display",
+      "source": "zone:display",
+      "destination": "gateway:display",
+      "ports": [
+        123
+      ],
+      "protocol": "udp",
+      "profiles": [
+        "normal",
+        "exercise",
+        "restored"
+      ],
+      "description": "Yalnız bölgenin ortak zaman hizmeti."
+    }
+  ]
+}

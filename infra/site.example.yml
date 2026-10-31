@@ -1,0 +1,20 @@
+---
+# Gerçek host bilgileri .local/site.yml içinde tutulmalıdır.
+deployment_configured: false
+pve_host: 10.77.10.10
+pve_node: REPLACE_ME_NODE
+pve_storage: REPLACE_ME_STORAGE
+pve_ca_path: REPLACE_ME_CA_FILE
+ansible_user: REPLACE_ME_SSH_USER
+proxmox_bridges:
+  mgmt: vmbr10
+  dmz: vmbr20
+  kkbs: vmbr30
+  ot: vmbr40
+  soc: vmbr50
+  external: vmbr60
+  display: vmbr70
+template_vmids:
+  ubuntu: 9000
+  kali: 9001
+lab_profile: normal

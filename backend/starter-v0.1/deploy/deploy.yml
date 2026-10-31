@@ -1,0 +1,83 @@
+---
+- name: Deploy the standalone KALKAN backend starter to the selected lab VM
+  hosts: kalkan_backend
+  become: true
+  tasks:
+    - name: Create the service account
+      ansible.builtin.user:
+        name: kalkan
+        system: true
+        create_home: false
+        shell: /usr/sbin/nologin
+    - name: Create service directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: kalkan
+        group: kalkan
+        mode: '0750'
+      loop:
+        - /opt/kalkan-1-backend
+        - /var/lib/kalkan-1-backend
+        - /var/log/kalkan-1-backend
+    - name: Copy the reviewed source files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../{{ item }}"
+        dest: "/opt/kalkan-1-backend/{{ item }}"
+        owner: root
+        group: kalkan
+        mode: preserve
+      loop:
+        - engine.py
+        - server.py
+      notify: Restart backend
+    - name: Copy the reviewed source directories
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../{{ item }}/"
+        dest: "/opt/kalkan-1-backend/{{ item }}/"
+        owner: root
+        group: kalkan
+        mode: preserve
+      loop:
+        - config
+        - tools
+        - web
+      notify: Restart backend
+    - name: Initialize installation-specific role keys
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/python3
+          - /opt/kalkan-1-backend/tools/init_lab.py
+          - --runtime
+          - /var/lib/kalkan-1-backend
+        creates: /var/lib/kalkan-1-backend/credentials.json
+      become_user: kalkan
+      no_log: true
+    - name: Install the service definition
+      ansible.builtin.copy:
+        src: kalkan-backend.service
+        dest: /etc/systemd/system/kalkan-backend.service
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart backend
+    - name: Enable the service
+      ansible.builtin.systemd_service:
+        name: kalkan-backend
+        enabled: true
+        state: started
+        daemon_reload: true
+    - name: Wait for the API health endpoint
+      ansible.builtin.uri:
+        url: http://127.0.0.1:8088/healthz
+        status_code: 200
+      register: health
+      retries: 10
+      delay: 1
+      until: health.status == 200
+  handlers:
+    - name: Restart backend
+      ansible.builtin.systemd_service:
+        name: kalkan-backend
+        state: restarted
+        daemon_reload: true

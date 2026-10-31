@@ -1,0 +1,264 @@
+{
+  "schema": "kalkan.topology.v1",
+  "plan_id": "K1-INFRA-02",
+  "address_revision": "R1",
+  "default_profile": "normal",
+  "deployment_status": "not_deployed",
+  "hypervisor": {
+    "name": "PVE-01",
+    "ip": "10.77.10.10",
+    "management_zone": "mgmt"
+  },
+  "networks": [
+    {
+      "id": "mgmt",
+      "label": "Yönetim",
+      "vlan": 10,
+      "cidr": "10.77.10.0/24",
+      "gateway": "10.77.10.1",
+      "bridge": "vmbr10"
+    },
+    {
+      "id": "dmz",
+      "label": "DMZ",
+      "vlan": 20,
+      "cidr": "10.77.20.0/24",
+      "gateway": "10.77.20.1",
+      "bridge": "vmbr20"
+    },
+    {
+      "id": "kkbs",
+      "label": "KKBS",
+      "vlan": 30,
+      "cidr": "10.77.30.0/24",
+      "gateway": "10.77.30.1",
+      "bridge": "vmbr30"
+    },
+    {
+      "id": "ot",
+      "label": "OT modeli",
+      "vlan": 40,
+      "cidr": "10.77.40.0/24",
+      "gateway": "10.77.40.1",
+      "bridge": "vmbr40"
+    },
+    {
+      "id": "soc",
+      "label": "SOC / Wazuh",
+      "vlan": 50,
+      "cidr": "10.77.50.0/24",
+      "gateway": "10.77.50.1",
+      "bridge": "vmbr50"
+    },
+    {
+      "id": "external",
+      "label": "Dış lab / internet emülasyonu",
+      "vlan": 60,
+      "cidr": "198.18.60.0/24",
+      "gateway": "198.18.60.1",
+      "bridge": "vmbr60"
+    },
+    {
+      "id": "display",
+      "label": "Gösterim",
+      "vlan": 70,
+      "cidr": "10.77.70.0/24",
+      "gateway": "10.77.70.1",
+      "bridge": "vmbr70"
+    }
+  ],
+  "vms": [
+    {
+      "vmid": 100,
+      "name": "FW-01",
+      "zone": "mgmt",
+      "ansible_host": "10.77.10.1",
+      "vcpu": 2,
+      "ram_gib": 2,
+      "disk_gib": 20,
+      "template": "ubuntu",
+      "role": "firewall",
+      "interfaces": [
+        {
+          "zone": "mgmt",
+          "ip": "10.77.10.1"
+        },
+        {
+          "zone": "dmz",
+          "ip": "10.77.20.1"
+        },
+        {
+          "zone": "kkbs",
+          "ip": "10.77.30.1"
+        },
+        {
+          "zone": "ot",
+          "ip": "10.77.40.1"
+        },
+        {
+          "zone": "soc",
+          "ip": "10.77.50.1"
+        },
+        {
+          "zone": "external",
+          "ip": "198.18.60.1"
+        },
+        {
+          "zone": "display",
+          "ip": "10.77.70.1"
+        }
+      ]
+    },
+    {
+      "vmid": 110,
+      "name": "MGMT-01",
+      "zone": "mgmt",
+      "ansible_host": "10.77.10.20",
+      "vcpu": 2,
+      "ram_gib": 2,
+      "disk_gib": 30,
+      "template": "ubuntu",
+      "role": "automation",
+      "interfaces": [
+        {
+          "zone": "mgmt",
+          "ip": "10.77.10.20"
+        }
+      ]
+    },
+    {
+      "vmid": 120,
+      "name": "WAZUH-01",
+      "zone": "soc",
+      "ansible_host": "10.77.50.20",
+      "vcpu": 4,
+      "ram_gib": 8,
+      "disk_gib": 100,
+      "template": "ubuntu",
+      "role": "siem",
+      "interfaces": [
+        {
+          "zone": "soc",
+          "ip": "10.77.50.20"
+        }
+      ]
+    },
+    {
+      "vmid": 130,
+      "name": "KALI-RED-01",
+      "zone": "external",
+      "ansible_host": "198.18.60.20",
+      "vcpu": 2,
+      "ram_gib": 4,
+      "disk_gib": 60,
+      "template": "kali",
+      "role": "red",
+      "interfaces": [
+        {
+          "zone": "external",
+          "ip": "198.18.60.20"
+        }
+      ]
+    },
+    {
+      "vmid": 140,
+      "name": "DMZ-PORTAL-01",
+      "zone": "dmz",
+      "ansible_host": "10.77.20.20",
+      "vcpu": 2,
+      "ram_gib": 2,
+      "disk_gib": 30,
+      "template": "ubuntu",
+      "role": "dmz_portal",
+      "interfaces": [
+        {
+          "zone": "dmz",
+          "ip": "10.77.20.20"
+        }
+      ]
+    },
+    {
+      "vmid": 150,
+      "name": "KKBS-INT-01",
+      "zone": "kkbs",
+      "ansible_host": "10.77.30.20",
+      "vcpu": 2,
+      "ram_gib": 2,
+      "disk_gib": 30,
+      "template": "ubuntu",
+      "role": "integration",
+      "interfaces": [
+        {
+          "zone": "kkbs",
+          "ip": "10.77.30.20"
+        }
+      ]
+    },
+    {
+      "vmid": 160,
+      "name": "KKBS-APP-01",
+      "zone": "kkbs",
+      "ansible_host": "10.77.30.30",
+      "vcpu": 4,
+      "ram_gib": 4,
+      "disk_gib": 60,
+      "template": "ubuntu",
+      "role": "application",
+      "interfaces": [
+        {
+          "zone": "kkbs",
+          "ip": "10.77.30.30"
+        }
+      ]
+    },
+    {
+      "vmid": 170,
+      "name": "OT-SIM-01",
+      "zone": "ot",
+      "ansible_host": "10.77.40.20",
+      "vcpu": 2,
+      "ram_gib": 2,
+      "disk_gib": 30,
+      "template": "ubuntu",
+      "role": "process_model",
+      "interfaces": [
+        {
+          "zone": "ot",
+          "ip": "10.77.40.20"
+        }
+      ]
+    }
+  ],
+  "profiles": {
+    "normal": {
+      "legacy_ssh": false,
+      "pivot_egress": false,
+      "overbroad_api": false
+    },
+    "exercise": {
+      "legacy_ssh": true,
+      "pivot_egress": true,
+      "overbroad_api": true
+    },
+    "restored": {
+      "legacy_ssh": false,
+      "pivot_egress": false,
+      "overbroad_api": false
+    }
+  },
+  "clients": {
+    "reji": {
+      "zone": "display",
+      "ip": "10.77.70.20"
+    },
+    "blue": {
+      "zone": "soc",
+      "ip": "10.77.50.30"
+    },
+    "audience": {
+      "zone": "display",
+      "first_ip": "10.77.70.30",
+      "last_ip": "10.77.70.39"
+    }
+  }
+}

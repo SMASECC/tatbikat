@@ -1,0 +1,61 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const app=fs.readFileSync(__dirname+'/app.js','utf8').replace('  /* SERVICE_CHECKS */',fs.readFileSync(__dirname+'/service-checks.js','utf8')).replace('  /* SESSION_MODEL */',fs.readFileSync(__dirname+'/session-model.js','utf8'));
+const at=Date.parse('2026-10-31T10:00:00Z');
+const m=vm.runInNewContext(app.split('  const KEY=')[0]+`\nconst state={m:0,playing:false,anchor:${at},impactAt:${at-5000}};return {REGION_DATA,caseIdFor,incidentId,emptyCase,validateCase,caseMetrics,durationLabel,utcInput,parseUTC,confirmedEdges,topologyMarkup,validateRecording,caseReport,actorStatement,recordedEffects,CASE_SCHEMA};})();`,{Date,Intl});
+let checks=0;const check=(v,message)=>{assert.ok(v,message);checks++;},bad=(fn,message)=>{assert.throws(fn,undefined,message);checks++;};
+const run='session-test-run',id=m.caseIdFor(run),data=m.emptyCase(run,at);
+check(id===m.caseIdFor(run)&&id!==m.caseIdFor(run+'-new'),'case IDs are stable and change between runs');
+check(m.incidentId(id,6)===id+'-E07','stage effects and evidence share event IDs');
+check(m.caseMetrics(data).every(r=>r.ms===null),'missing incident timestamps produce no fabricated metrics');
+data.times={started:{at,ref:'raw-1'},detected:{at:at+120000,ref:'wazuh-2'},contained:{at:at+300000,ref:'control-3'},restored:{at:at+600000,ref:'service-4'}};
+let clean=m.validateCase(data,id),metrics=m.caseMetrics(clean);
+check(metrics.map(r=>r.ms).join(',')==='120000,180000,300000,600000','durations use real timestamps rather than presentation cursor');
+check(m.durationLabel(metrics[0].ms)==='00:02:00'&&m.durationLabel(null)==='Ölçülmedi','measured and unavailable durations are distinct');
+check(m.parseUTC('2026-10-31T10:00:00')===at&&m.utcInput(at)==='2026-10-31T10:00:00','UTC is independent of browser timezone');
+bad(()=>m.parseUTC('2026-02-31T10:00:00'),'invalid calendar dates are rejected');
+bad(()=>m.parseUTC('2026-10-31T10:00:00+03:00'),'ambiguous timezone input is rejected');
+bad(()=>m.validateCase({...data,times:{detected:{at:at+300,ref:'x'},contained:{at,ref:'y'}}},id),'reversed event timestamps are rejected');
+bad(()=>m.validateCase({...data,times:{started:{at,ref:''}}},id),'each real timestamp needs a proof reference');
+const evidence={id:'B-1',stage:2,kind:'log',at,addedAt:at,ref:'TEST-WAZUH-REF',summary:'<script>alert(1)</script> & log context',value:'',iocType:'',confidence:'orta',from:'source',to:'command',confirmed:false};
+data.evidence=[evidence];clean=m.validateCase(data,id);
+check(m.confirmedEdges(clean).length===0,'unconfirmed relationships do not become graph edges');
+data.evidence[0].confirmed=true;clean=m.validateCase(data,id);
+check(m.confirmedEdges(clean,1).length===0&&m.confirmedEdges(clean,2).length===1,'audience cannot see future-stage graph evidence');
+check(!m.topologyMarkup(clean,9,false).includes('TEST-WAZUH-REF')&&m.topologyMarkup(clean,9,true).includes('TEST-WAZUH-REF'),'raw references remain private on audience topology');
+bad(()=>m.validateCase({...data,evidence:[{...evidence,confirmed:true,ref:''}]},id),'no confirmed edge without evidence');
+bad(()=>m.validateCase({...data,evidence:[{...evidence,from:'plc',to:'plc'}]},id),'self-edges are rejected');
+bad(()=>m.validateCase({...data,evidence:[{...evidence,kind:'ttp',value:'T999'}]},id),'malformed ATT&CK IDs are rejected');
+bad(()=>m.validateCase({...data,evidence:[{...evidence,kind:'ioc',value:''}]},id),'empty IOC entries are rejected');
+bad(()=>m.validateCase({...data,actor:{name:'Example Group',confidence:'yüksek',basis:''}},id),'group similarity needs a rationale');
+check(m.actorStatement({name:'Example Group',confidence:'düşük'}).includes('kesin atıf oluşturmamaktadır')&&m.actorStatement({name:'Example Group',confidence:'düşük'}).includes('taklit'),'attribution always retains uncertainty and mimicry');
+const frame={sequence:1,sessionId:id,at,cursor:60,stage:2,curtain:false,regions:m.REGION_DATA.map(r=>({id:r.id,assets:r.units.map((u,i)=>({id:u.id,x:100+i*20,y:200,refX:100,refY:200,drift:i===0?650:0,destroyed:false,offline:false,changed:false,tone:'green'}))})),plants:m.REGION_DATA.map(r=>({id:r.id,actual:58,shown:88,temp:48,valve:70,service:26,offline:false})),rows:m.REGION_DATA.flatMap(r=>[...r.units.map(u=>({id:u.id,region:r.id,metricLabel:'Konum',metricValue:'TEST',tone:'cyan',offline:false,age:.4,link:97,lastReceivedAt:at,packetSequence:1})),{id:r.code+'-PLC-01',region:r.id,metricLabel:'Seviye',metricValue:'58 %',tone:'cyan',offline:false,age:.4,link:99,lastReceivedAt:at,packetSequence:1}])};
+const bundle={schema:m.CASE_SCHEMA,session:{id,runId:run,openedAt:at,data:clean,frameCount:1,eventCount:1},frames:[frame],events:[{sequence:1,at,stage:2,source:'analyst',kind:'evidence',text:evidence.summary}]};
+let imported=m.validateRecording(bundle);
+check(imported.frames[0].rows.length===31&&imported.frames[0].regions.flatMap(r=>r.assets).length===27,'recording roundtrip preserves all 31 sources and 27 field positions');
+check(!imported.session.recording,'imports can never resume live recording');
+check(imported.events[0].eventId===m.incidentId(id,2),'import reconstructs consistent event IDs');
+bad(()=>m.validateRecording({...bundle,frames:[{...frame,rows:frame.rows.slice(1)}]}),'truncated telemetry frames are rejected');
+bad(()=>m.validateRecording({...bundle,frames:[{...frame,sequence:1},{...frame,sequence:1}]}),'duplicate frame sequence is rejected');
+bad(()=>m.validateRecording({...bundle,frames:[{...frame,sequence:1,at:at+1000},{...frame,sequence:2,at}]}),'backwards frame clocks are rejected');
+bad(()=>m.validateRecording({...bundle,events:[{at,stage:2,source:'wazuh-live',kind:'x',text:'x'}]}),'imports cannot pretend to contain verified live Wazuh events');
+const report=m.caseReport(imported);
+check(!report.includes('<script>alert(1)</script>')&&report.includes('&lt;script&gt;'),'untrusted evidence is escaped in exported reports');
+check(report.includes('30 saniyelik sunum süresi ölçüme katılmamıştır')&&report.includes('Wazuh loglarını otomatik doğrulamamaktadır'),'report states metric provenance and Wazuh evidence boundary');
+check(report.includes('en düşük tesis hizmeti %26.0')&&report.includes('650 m'),'report derives effects only from stored samples');
+check(m.recordedEffects([])===null,'missing telemetry yields no fabricated effect summary');
+const huge=Array(10800).fill(frame);check(m.recordedEffects(huge).maximumDrift===650,'long recordings summarize without argument-stack overflow');
+const runtime=fs.readFileSync(__dirname+'/session-workbench.js','utf8');
+check(runtime.includes("db.transaction(extraStore?['sessions',extraStore]:['sessions'],'readwrite')"),'metadata and sequence counters are committed atomically across windows');
+check(runtime.includes("if(await dbRead('sessions',bundle.session.id))throw"),'imports cannot overwrite existing case archives');
+check(!app.includes("id:'defense'"),'the cancelled custom defence monitor remains absent');
+
+let journalArgs;
+const transitionCode=runtime.slice(runtime.indexOf('  function onSessionTransition('),runtime.indexOf('  function packSessionFrame('));
+const transition=vm.runInNewContext(transitionCode+';onSessionTransition',{stageAt:c=>({index:Math.floor(c/30)}),STAGES:Array.from({length:10},(_,i)=>({name:'Step '+i})),appendJournal:(...args)=>{journalArgs=args;},enqueueSession:fn=>{fn();return {catch(){}};}});
+transition({runId:'same',cursor:0},{runId:'same',cursor:0,caseData:{}},'evidence','TEST',2);
+check(journalArgs[4]===2&&journalArgs[3]==='analyst','journal uses the selected evidence event, independently of the current scene');
+console.log(checks+' session IDs, timestamps, evidence, replay validation, report and privacy checks passed.');
+
+if(process.argv[2]){const b=m.validateRecording(JSON.parse(fs.readFileSync(process.argv[2],'utf8')));assert.equal(b.session.frameCount,b.frames.length);console.log(JSON.stringify({actualExport:true,frames:b.frames.length,events:b.events.length,evidence:b.session.data.evidence.length,effects:m.recordedEffects(b.frames)}));}
+
+if(process.argv[3]){const fixture=JSON.parse(JSON.stringify(bundle));fixture.session.data.evidence[0].summary='TEST: İçe aktarma ve kanıt doğrulama örneği.';fixture.events[0].text='TEST: Analist bulgusu eklenmiştir.';fs.writeFileSync(process.argv[3],JSON.stringify(fixture));}

@@ -1,0 +1,17 @@
+{
+  "schema": "kalkan.source-lock.v1",
+  "frontend": {
+    "revision": 3,
+    "sha256": "7a5d393094f9c16e3cfb643ad752ff8a2fded04221b678b72c4239d37581953b",
+    "mode": "standalone_local_model"
+  },
+  "infrastructure_plan": {
+    "address_revision": "R1",
+    "sha256": "22ccc8703beacbeda9c0d155e6ef036d03df576c6a95554576335d9b5af961cf"
+  },
+  "backend": {
+    "version": "0.1.0",
+    "mode": "application_effect_emulation"
+  },
+  "source_date": "2026-10-31"
+}

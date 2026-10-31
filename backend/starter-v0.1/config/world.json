@@ -1,0 +1,3503 @@
+{
+  "regions": [
+    {
+      "id": "karatepe",
+      "code": "KR",
+      "number": "01",
+      "name": "Karatepe Üs Bölgesi",
+      "short": "Karatepe",
+      "terrain": "Dağlık üs bölgesi",
+      "description": "Zırhlı devriye, üs emniyeti ve VTOL gözetlemesi",
+      "seed": 1,
+      "origin": [
+        40,
+        32
+      ],
+      "baseElevation": 1820,
+      "phase": 0,
+      "wind": "KB 12 km/sa",
+      "visibility": "8,4 km",
+      "accent": "#73d7cf",
+      "palette": [
+        48,
+        65,
+        48
+      ],
+      "base": [
+        560,
+        420
+      ],
+      "helipad": [
+        720,
+        440
+      ],
+      "drone": [
+        950,
+        250,
+        165,
+        87
+      ],
+      "changedTarget": {
+        "name": "DOĞU VADİSİ",
+        "x": 1030,
+        "y": 550
+      },
+      "peaks": [
+        [
+          0.14,
+          0.18,
+          0.022,
+          0.035,
+          900
+        ],
+        [
+          0.41,
+          0.05,
+          0.028,
+          0.019,
+          680
+        ],
+        [
+          0.78,
+          0.17,
+          0.025,
+          0.022,
+          1040
+        ],
+        [
+          0.96,
+          0.56,
+          0.018,
+          0.045,
+          730
+        ],
+        [
+          0.53,
+          0.99,
+          0.053,
+          0.019,
+          680
+        ],
+        [
+          0.02,
+          0.8,
+          0.018,
+          0.044,
+          500
+        ]
+      ],
+      "outer": [
+        [
+          300,
+          535
+        ],
+        [
+          430,
+          480
+        ],
+        [
+          560,
+          445
+        ],
+        [
+          650,
+          415
+        ],
+        [
+          770,
+          380
+        ],
+        [
+          855,
+          300
+        ],
+        [
+          810,
+          225
+        ],
+        [
+          680,
+          200
+        ],
+        [
+          515,
+          225
+        ],
+        [
+          400,
+          275
+        ],
+        [
+          330,
+          355
+        ],
+        [
+          300,
+          450
+        ]
+      ],
+      "perimeter": [
+        [
+          410,
+          345
+        ],
+        [
+          510,
+          320
+        ],
+        [
+          650,
+          290
+        ],
+        [
+          790,
+          370
+        ],
+        [
+          745,
+          495
+        ],
+        [
+          525,
+          535
+        ],
+        [
+          405,
+          445
+        ]
+      ],
+      "supply": [
+        [
+          80,
+          650
+        ],
+        [
+          220,
+          610
+        ],
+        [
+          300,
+          535
+        ],
+        [
+          430,
+          480
+        ],
+        [
+          510,
+          450
+        ],
+        [
+          430,
+          480
+        ],
+        [
+          300,
+          535
+        ],
+        [
+          220,
+          610
+        ]
+      ],
+      "inner": [
+        [
+          500,
+          410
+        ],
+        [
+          535,
+          390
+        ],
+        [
+          580,
+          405
+        ],
+        [
+          615,
+          435
+        ],
+        [
+          650,
+          465
+        ],
+        [
+          600,
+          490
+        ],
+        [
+          540,
+          470
+        ]
+      ],
+      "targets": [
+        [
+          "KUZEY KONTROL NOKTASI",
+          680,
+          200
+        ],
+        [
+          "DOĞU GÖZLEM NOKTASI",
+          855,
+          300
+        ],
+        [
+          "İKMAL NOKTASI",
+          510,
+          450
+        ],
+        [
+          "KEŞİF SEKTÖRÜ",
+          1020,
+          215
+        ],
+        [
+          "BATI NİZAMİYE",
+          410,
+          345
+        ],
+        [
+          "KOMUTA BİNASI",
+          570,
+          365
+        ]
+      ],
+      "units": [
+        {
+          "id": "KR-ZPT-01",
+          "kind": "ground",
+          "type": "Zırhlı personel taşıyıcı",
+          "task": "Üs çevre emniyeti",
+          "icon": "armor",
+          "color": "#75d9ef",
+          "label": [
+            20,
+            -52
+          ],
+          "destination": "KUZEY KONTROL NOKTASI",
+          "target": [
+            680,
+            200
+          ],
+          "speed": 6.4,
+          "offset": 0,
+          "values": {
+            "fuel": 78,
+            "engine": {
+              "base": 81,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              300,
+              535
+            ],
+            [
+              430,
+              480
+            ],
+            [
+              560,
+              445
+            ],
+            [
+              650,
+              415
+            ],
+            [
+              770,
+              380
+            ],
+            [
+              855,
+              300
+            ],
+            [
+              810,
+              225
+            ],
+            [
+              680,
+              200
+            ],
+            [
+              515,
+              225
+            ],
+            [
+              400,
+              275
+            ],
+            [
+              330,
+              355
+            ],
+            [
+              300,
+              450
+            ]
+          ]
+        },
+        {
+          "id": "KR-DEVR-02",
+          "kind": "ground",
+          "type": "4×4 zırhlı devriye aracı",
+          "task": "Sırt hattı devriyesi",
+          "icon": "jeep",
+          "color": "#75d9ef",
+          "label": [
+            18,
+            20
+          ],
+          "destination": "DOĞU GÖZLEM NOKTASI",
+          "target": [
+            855,
+            300
+          ],
+          "speed": 7.8,
+          "offset": 720,
+          "values": {
+            "fuel": 64,
+            "engine": {
+              "base": 84,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              300,
+              535
+            ],
+            [
+              430,
+              480
+            ],
+            [
+              560,
+              445
+            ],
+            [
+              650,
+              415
+            ],
+            [
+              770,
+              380
+            ],
+            [
+              855,
+              300
+            ],
+            [
+              810,
+              225
+            ],
+            [
+              680,
+              200
+            ],
+            [
+              515,
+              225
+            ],
+            [
+              400,
+              275
+            ],
+            [
+              330,
+              355
+            ],
+            [
+              300,
+              450
+            ]
+          ]
+        },
+        {
+          "id": "KR-VTOL-01",
+          "kind": "air",
+          "type": "VTOL keşif dronu",
+          "task": "Geniş alan gözetlemesi",
+          "icon": "vtol",
+          "color": "#c5afff",
+          "label": [
+            -170,
+            -58
+          ],
+          "destination": "KEŞİF SEKTÖRÜ",
+          "target": [
+            1020,
+            215
+          ],
+          "speed": 5.5,
+          "offset": 0,
+          "values": {
+            "battery": 73,
+            "altitude": {
+              "base": 185,
+              "swing": 3,
+              "rate": 0.07
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "altitude",
+              "label": "UÇUŞ İRTİFASI",
+              "unit": "m AGL",
+              "digits": 0
+            },
+            {
+              "key": "battery",
+              "label": "BATARYA",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "orbit": {
+            "cx": 950,
+            "cy": 250,
+            "rx": 165,
+            "ry": 87,
+            "rate": 0.018
+          }
+        },
+        {
+          "id": "KR-EMN-01",
+          "kind": "personnel",
+          "type": "6 personel · Nizamiye emniyet timi",
+          "task": "Nizamiye emniyet timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            -170,
+            -36
+          ],
+          "destination": "BATI NİZAMİYE",
+          "target": [
+            410,
+            345
+          ],
+          "speed": 1.15,
+          "offset": 0,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 6
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              410,
+              345
+            ],
+            [
+              510,
+              320
+            ],
+            [
+              650,
+              290
+            ],
+            [
+              790,
+              370
+            ],
+            [
+              745,
+              495
+            ],
+            [
+              525,
+              535
+            ],
+            [
+              405,
+              445
+            ]
+          ],
+          "people": 6
+        },
+        {
+          "id": "KR-DEV-02",
+          "kind": "personnel",
+          "type": "4 personel · Yaya devriye timi",
+          "task": "Yaya devriye timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            22,
+            12
+          ],
+          "destination": "KOMUTA BİNASI",
+          "target": [
+            570,
+            365
+          ],
+          "speed": 1.15,
+          "offset": 145,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 4
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              500,
+              410
+            ],
+            [
+              535,
+              390
+            ],
+            [
+              580,
+              405
+            ],
+            [
+              615,
+              435
+            ],
+            [
+              650,
+              465
+            ],
+            [
+              600,
+              490
+            ],
+            [
+              540,
+              470
+            ]
+          ],
+          "people": 4
+        },
+        {
+          "id": "KR-GÖZ-01",
+          "kind": "fixed",
+          "type": "Sabit gözetleme noktası",
+          "task": "Doğu gözetleme noktası",
+          "icon": "camera",
+          "color": "#edcd8f",
+          "label": [
+            24,
+            20
+          ],
+          "destination": "DOĞU GÖZLEM NOKTASI",
+          "target": [
+            835,
+            320
+          ],
+          "speed": 0,
+          "offset": 0,
+          "values": {
+            "pan": {
+              "base": 42,
+              "swing": 7,
+              "rate": 0.025
+            },
+            "voltage": 24.1,
+            "temperature": {
+              "base": 13.2,
+              "swing": 0.4,
+              "rate": 0.02
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "pan",
+              "label": "BAKIŞ AÇISI",
+              "unit": "°",
+              "digits": 0
+            },
+            {
+              "key": "voltage",
+              "label": "BESLEME",
+              "unit": "V",
+              "digits": 1
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "fixed": [
+            835,
+            320
+          ]
+        }
+      ],
+      "highlight": {
+        "label": "VTOL",
+        "asset": "KR-VTOL-01",
+        "key": "battery",
+        "unit": "%"
+      },
+      "heroMetrics": [
+        {
+          "asset": "KR-VTOL-01",
+          "metric": {
+            "key": "altitude",
+            "label": "VTOL İRTİFASI",
+            "unit": "m AGL",
+            "digits": 0
+          }
+        },
+        {
+          "asset": "KR-VTOL-01",
+          "metric": {
+            "key": "battery",
+            "label": "VTOL BATARYASI",
+            "unit": "%",
+            "digits": 0
+          }
+        }
+      ],
+      "mix": {
+        "ground": 2,
+        "air": 1,
+        "personnel": 2,
+        "fixed": 1
+      },
+      "people": 10,
+      "composition": "2 kara · 1 hava · 2 tim · 1 sabit"
+    },
+    {
+      "id": "akvadi",
+      "code": "AV",
+      "number": "02",
+      "name": "Akvadi İleri Üs",
+      "short": "Akvadi",
+      "terrain": "Ormanlık vadi",
+      "description": "Hafif arazi keşfi, köprü kontrolü ve saha haberleşmesi",
+      "seed": 5,
+      "origin": [
+        39,
+        34
+      ],
+      "baseElevation": 1360,
+      "phase": 28,
+      "wind": "B 8 km/sa",
+      "visibility": "10,2 km",
+      "accent": "#87b9ee",
+      "palette": [
+        41,
+        67,
+        61
+      ],
+      "base": [
+        665,
+        440
+      ],
+      "helipad": [
+        790,
+        465
+      ],
+      "drone": [
+        855,
+        245,
+        195,
+        90
+      ],
+      "changedTarget": {
+        "name": "GÜNEY VADİSİ",
+        "x": 1040,
+        "y": 575
+      },
+      "peaks": [
+        [
+          0.08,
+          0.18,
+          0.024,
+          0.04,
+          990
+        ],
+        [
+          0.55,
+          0.02,
+          0.028,
+          0.018,
+          650
+        ],
+        [
+          0.86,
+          0.13,
+          0.023,
+          0.025,
+          850
+        ],
+        [
+          0.98,
+          0.65,
+          0.025,
+          0.04,
+          810
+        ],
+        [
+          0.54,
+          0.99,
+          0.06,
+          0.025,
+          500
+        ]
+      ],
+      "outer": [
+        [
+          170,
+          575
+        ],
+        [
+          310,
+          515
+        ],
+        [
+          440,
+          470
+        ],
+        [
+          565,
+          455
+        ],
+        [
+          690,
+          425
+        ],
+        [
+          825,
+          350
+        ],
+        [
+          935,
+          275
+        ],
+        [
+          900,
+          205
+        ],
+        [
+          755,
+          170
+        ],
+        [
+          595,
+          225
+        ],
+        [
+          430,
+          270
+        ],
+        [
+          310,
+          340
+        ],
+        [
+          225,
+          440
+        ]
+      ],
+      "perimeter": [
+        [
+          500,
+          345
+        ],
+        [
+          720,
+          300
+        ],
+        [
+          865,
+          410
+        ],
+        [
+          800,
+          535
+        ],
+        [
+          575,
+          570
+        ],
+        [
+          465,
+          460
+        ]
+      ],
+      "supply": [
+        [
+          85,
+          650
+        ],
+        [
+          170,
+          575
+        ],
+        [
+          310,
+          515
+        ],
+        [
+          440,
+          470
+        ],
+        [
+          580,
+          455
+        ],
+        [
+          440,
+          470
+        ],
+        [
+          310,
+          515
+        ],
+        [
+          170,
+          575
+        ]
+      ],
+      "inner": [
+        [
+          575,
+          405
+        ],
+        [
+          625,
+          380
+        ],
+        [
+          685,
+          410
+        ],
+        [
+          735,
+          460
+        ],
+        [
+          705,
+          505
+        ],
+        [
+          625,
+          500
+        ],
+        [
+          575,
+          455
+        ]
+      ],
+      "targets": [
+        [
+          "VADİ GEÇİŞ NOKTASI",
+          310,
+          340
+        ],
+        [
+          "KUZEY GÖZLEM NOKTASI",
+          900,
+          205
+        ],
+        [
+          "İLERİ İKMAL NOKTASI",
+          580,
+          455
+        ],
+        [
+          "VADİ GÖZETLEME SEKTÖRÜ",
+          1015,
+          200
+        ],
+        [
+          "ÜS BATI GİRİŞİ",
+          500,
+          345
+        ],
+        [
+          "İLERİ KOMUTA BİNASI",
+          665,
+          390
+        ]
+      ],
+      "units": [
+        {
+          "id": "AV-4X4-01",
+          "kind": "ground",
+          "type": "Hafif arazi keşif aracı",
+          "task": "Vadi yol devriyesi",
+          "icon": "jeep",
+          "color": "#75d9ef",
+          "label": [
+            20,
+            -52
+          ],
+          "destination": "VADİ GEÇİŞ NOKTASI",
+          "target": [
+            310,
+            340
+          ],
+          "speed": 5.5,
+          "offset": 0,
+          "values": {
+            "fuel": 71,
+            "engine": {
+              "base": 77,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              170,
+              575
+            ],
+            [
+              310,
+              515
+            ],
+            [
+              440,
+              470
+            ],
+            [
+              565,
+              455
+            ],
+            [
+              690,
+              425
+            ],
+            [
+              825,
+              350
+            ],
+            [
+              935,
+              275
+            ],
+            [
+              900,
+              205
+            ],
+            [
+              755,
+              170
+            ],
+            [
+              595,
+              225
+            ],
+            [
+              430,
+              270
+            ],
+            [
+              310,
+              340
+            ],
+            [
+              225,
+              440
+            ]
+          ]
+        },
+        {
+          "id": "AV-ATV-02",
+          "kind": "ground",
+          "type": "ATV arazi aracı",
+          "task": "Orman kenarı keşfi",
+          "icon": "atv",
+          "color": "#75d9ef",
+          "label": [
+            20,
+            22
+          ],
+          "destination": "KUZEY GÖZLEM NOKTASI",
+          "target": [
+            900,
+            205
+          ],
+          "speed": 3.5,
+          "offset": 230,
+          "values": {
+            "fuel": 62,
+            "engine": {
+              "base": 66,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              500,
+              345
+            ],
+            [
+              720,
+              300
+            ],
+            [
+              865,
+              410
+            ],
+            [
+              800,
+              535
+            ],
+            [
+              575,
+              570
+            ],
+            [
+              465,
+              460
+            ]
+          ]
+        },
+        {
+          "id": "AV-MİNİ-01",
+          "kind": "air",
+          "type": "Mini keşif dronu",
+          "task": "Vadi ve köprü gözetlemesi",
+          "icon": "quadcopter",
+          "color": "#c5afff",
+          "label": [
+            -170,
+            -58
+          ],
+          "destination": "VADİ GÖZETLEME SEKTÖRÜ",
+          "target": [
+            1015,
+            200
+          ],
+          "speed": 5.5,
+          "offset": 0,
+          "values": {
+            "battery": 82,
+            "altitude": {
+              "base": 86,
+              "swing": 2,
+              "rate": 0.07
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "altitude",
+              "label": "UÇUŞ İRTİFASI",
+              "unit": "m AGL",
+              "digits": 0
+            },
+            {
+              "key": "battery",
+              "label": "BATARYA",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "orbit": {
+            "cx": 855,
+            "cy": 245,
+            "rx": 195,
+            "ry": 90,
+            "rate": 0.009
+          }
+        },
+        {
+          "id": "AV-KEŞ-01",
+          "kind": "personnel",
+          "type": "5 personel · Yaya keşif timi",
+          "task": "Yaya keşif timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            -172,
+            -45
+          ],
+          "destination": "ÜS BATI GİRİŞİ",
+          "target": [
+            500,
+            345
+          ],
+          "speed": 1.15,
+          "offset": 340,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 5
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              500,
+              345
+            ],
+            [
+              720,
+              300
+            ],
+            [
+              865,
+              410
+            ],
+            [
+              800,
+              535
+            ],
+            [
+              575,
+              570
+            ],
+            [
+              465,
+              460
+            ]
+          ],
+          "people": 5
+        },
+        {
+          "id": "AV-KÖP-02",
+          "kind": "personnel",
+          "type": "3 personel · Köprü kontrol timi",
+          "task": "Köprü kontrol timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            -168,
+            20
+          ],
+          "destination": "VADİ GEÇİŞ NOKTASI",
+          "target": [
+            310,
+            340
+          ],
+          "speed": 1.15,
+          "offset": 15,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 3
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              310,
+              340
+            ],
+            [
+              345,
+              322
+            ],
+            [
+              375,
+              305
+            ],
+            [
+              345,
+              322
+            ]
+          ],
+          "people": 3
+        },
+        {
+          "id": "AV-SNS-01",
+          "kind": "fixed",
+          "type": "Köprü ve dere sensörü",
+          "task": "Köprü sensör noktası",
+          "icon": "sensor",
+          "color": "#edcd8f",
+          "label": [
+            20,
+            -58
+          ],
+          "destination": "KÖPRÜ SENSÖR NOKTASI",
+          "target": [
+            355,
+            390
+          ],
+          "speed": 0,
+          "offset": 0,
+          "values": {
+            "waterLevel": {
+              "base": 1.24,
+              "swing": 0.03,
+              "rate": 0.02
+            },
+            "temperature": {
+              "base": 16.3,
+              "swing": 0.3,
+              "rate": 0.025
+            },
+            "battery": 94,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "waterLevel",
+              "label": "SU SEVİYESİ",
+              "unit": "m",
+              "digits": 2
+            },
+            {
+              "key": "temperature",
+              "label": "SICAKLIK",
+              "unit": "°C",
+              "digits": 1
+            },
+            {
+              "key": "battery",
+              "label": "BATARYA",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "fixed": [
+            355,
+            390
+          ]
+        },
+        {
+          "id": "AV-RÖLE-01",
+          "kind": "fixed",
+          "type": "Saha haberleşme rölesi",
+          "task": "Vadi haberleşme rölesi",
+          "icon": "relay",
+          "color": "#edcd8f",
+          "label": [
+            -170,
+            -30
+          ],
+          "destination": "VADI HABERLEŞME RÖLESI",
+          "target": [
+            990,
+            115
+          ],
+          "speed": 0,
+          "offset": 0,
+          "values": {
+            "battery": 88,
+            "voltage": 12.6,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "battery",
+              "label": "BATARYA",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "voltage",
+              "label": "BESLEME",
+              "unit": "V",
+              "digits": 1
+            }
+          ],
+          "fixed": [
+            990,
+            115
+          ]
+        }
+      ],
+      "highlight": {
+        "label": "MİNİ DRON",
+        "asset": "AV-MİNİ-01",
+        "key": "battery",
+        "unit": "%"
+      },
+      "heroMetrics": [
+        {
+          "asset": "AV-MİNİ-01",
+          "metric": {
+            "key": "altitude",
+            "label": "MİNİ DRON İRTİFASI",
+            "unit": "m AGL",
+            "digits": 0
+          }
+        },
+        {
+          "asset": "AV-SNS-01",
+          "metric": {
+            "key": "waterLevel",
+            "label": "DERE SEVİYESİ",
+            "unit": "m",
+            "digits": 2
+          }
+        }
+      ],
+      "mix": {
+        "ground": 2,
+        "air": 1,
+        "personnel": 2,
+        "fixed": 2
+      },
+      "people": 8,
+      "composition": "2 kara · 1 hava · 2 tim · 2 sabit"
+    },
+    {
+      "id": "sarpgecit",
+      "code": "SG",
+      "number": "03",
+      "name": "Sarp Geçit",
+      "short": "Sarp Geçit",
+      "terrain": "Yüksek dağ geçidi",
+      "description": "Yol kontrolü, kurtarma, geçit bakımı ve termal gözetleme",
+      "seed": 12,
+      "origin": [
+        38,
+        36
+      ],
+      "baseElevation": 2170,
+      "phase": 61,
+      "wind": "KD 22 km/sa",
+      "visibility": "6,2 km",
+      "accent": "#d6bd88",
+      "palette": [
+        73,
+        66,
+        51
+      ],
+      "base": [
+        595,
+        405
+      ],
+      "helipad": [
+        700,
+        435
+      ],
+      "drone": [
+        885,
+        250,
+        175,
+        98
+      ],
+      "changedTarget": {
+        "name": "BATI YAMAÇ NOKTASI",
+        "x": 285,
+        "y": 555
+      },
+      "peaks": [
+        [
+          0.14,
+          0.35,
+          0.02,
+          0.08,
+          1110
+        ],
+        [
+          0.3,
+          0.08,
+          0.02,
+          0.02,
+          700
+        ],
+        [
+          0.78,
+          0.28,
+          0.03,
+          0.07,
+          1150
+        ],
+        [
+          0.94,
+          0.8,
+          0.028,
+          0.04,
+          820
+        ],
+        [
+          0.18,
+          0.96,
+          0.03,
+          0.02,
+          550
+        ]
+      ],
+      "outer": [
+        [
+          540,
+          645
+        ],
+        [
+          600,
+          565
+        ],
+        [
+          640,
+          485
+        ],
+        [
+          610,
+          420
+        ],
+        [
+          555,
+          360
+        ],
+        [
+          585,
+          290
+        ],
+        [
+          645,
+          225
+        ],
+        [
+          620,
+          145
+        ],
+        [
+          560,
+          105
+        ],
+        [
+          510,
+          170
+        ],
+        [
+          535,
+          255
+        ],
+        [
+          480,
+          345
+        ],
+        [
+          500,
+          445
+        ],
+        [
+          460,
+          535
+        ]
+      ],
+      "perimeter": [
+        [
+          495,
+          340
+        ],
+        [
+          625,
+          300
+        ],
+        [
+          745,
+          360
+        ],
+        [
+          720,
+          475
+        ],
+        [
+          565,
+          510
+        ],
+        [
+          470,
+          435
+        ]
+      ],
+      "supply": [
+        [
+          540,
+          690
+        ],
+        [
+          540,
+          645
+        ],
+        [
+          600,
+          565
+        ],
+        [
+          640,
+          485
+        ],
+        [
+          610,
+          420
+        ],
+        [
+          585,
+          385
+        ],
+        [
+          610,
+          420
+        ],
+        [
+          640,
+          485
+        ],
+        [
+          600,
+          565
+        ],
+        [
+          540,
+          645
+        ]
+      ],
+      "inner": [
+        [
+          535,
+          390
+        ],
+        [
+          580,
+          365
+        ],
+        [
+          630,
+          390
+        ],
+        [
+          665,
+          435
+        ],
+        [
+          620,
+          475
+        ],
+        [
+          555,
+          455
+        ]
+      ],
+      "targets": [
+        [
+          "KUZEY GEÇİT NOKTASI",
+          620,
+          145
+        ],
+        [
+          "GÜNEY YOL KONTROLÜ",
+          600,
+          565
+        ],
+        [
+          "GEÇİT İKMAL NOKTASI",
+          585,
+          385
+        ],
+        [
+          "SIRT GÖZETLEME SEKTÖRÜ",
+          1015,
+          210
+        ],
+        [
+          "BATI GÖZETLEME NOKTASI",
+          495,
+          340
+        ],
+        [
+          "GEÇİT KOMUTA NOKTASI",
+          595,
+          370
+        ]
+      ],
+      "units": [
+        {
+          "id": "SG-YOL-01",
+          "kind": "ground",
+          "type": "4×4 yol kontrol aracı",
+          "task": "Geçit yol kontrolü",
+          "icon": "jeep",
+          "color": "#75d9ef",
+          "label": [
+            -172,
+            -50
+          ],
+          "destination": "KUZEY GEÇİT NOKTASI",
+          "target": [
+            620,
+            145
+          ],
+          "speed": 5.2,
+          "offset": 0,
+          "values": {
+            "fuel": 75,
+            "engine": {
+              "base": 78,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              540,
+              645
+            ],
+            [
+              600,
+              565
+            ],
+            [
+              640,
+              485
+            ],
+            [
+              610,
+              420
+            ],
+            [
+              555,
+              360
+            ],
+            [
+              585,
+              290
+            ],
+            [
+              645,
+              225
+            ],
+            [
+              620,
+              145
+            ],
+            [
+              560,
+              105
+            ],
+            [
+              510,
+              170
+            ],
+            [
+              535,
+              255
+            ],
+            [
+              480,
+              345
+            ],
+            [
+              500,
+              445
+            ],
+            [
+              460,
+              535
+            ]
+          ]
+        },
+        {
+          "id": "SG-KUR-02",
+          "kind": "ground",
+          "type": "Arazi tipi kurtarıcı",
+          "task": "Yol ve araç kurtarma",
+          "icon": "recovery",
+          "color": "#75d9ef",
+          "label": [
+            22,
+            -45
+          ],
+          "destination": "GÜNEY YOL KONTROLÜ",
+          "target": [
+            600,
+            565
+          ],
+          "speed": 4.2,
+          "offset": 610,
+          "values": {
+            "fuel": 81,
+            "engine": {
+              "base": 79,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "winchLoad": 12,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "winchLoad",
+              "label": "VİNÇ YÜKÜ",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              540,
+              645
+            ],
+            [
+              600,
+              565
+            ],
+            [
+              640,
+              485
+            ],
+            [
+              610,
+              420
+            ],
+            [
+              555,
+              360
+            ],
+            [
+              585,
+              290
+            ],
+            [
+              645,
+              225
+            ],
+            [
+              620,
+              145
+            ],
+            [
+              560,
+              105
+            ],
+            [
+              510,
+              170
+            ],
+            [
+              535,
+              255
+            ],
+            [
+              480,
+              345
+            ],
+            [
+              500,
+              445
+            ],
+            [
+              460,
+              535
+            ]
+          ]
+        },
+        {
+          "id": "SG-BAK-03",
+          "kind": "ground",
+          "type": "Paletli yol bakım aracı",
+          "task": "Geçit yol bakımı",
+          "icon": "dozer",
+          "color": "#75d9ef",
+          "label": [
+            20,
+            20
+          ],
+          "destination": "GEÇİT İKMAL NOKTASI",
+          "target": [
+            585,
+            385
+          ],
+          "speed": 1.8,
+          "offset": 110,
+          "values": {
+            "fuel": 72,
+            "engine": {
+              "base": 82,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "hydraulic": {
+              "base": 158,
+              "swing": 4,
+              "rate": 0.08
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "hydraulic",
+              "label": "HİDROLİK",
+              "unit": "bar",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              610,
+              420
+            ],
+            [
+              640,
+              485
+            ],
+            [
+              600,
+              565
+            ],
+            [
+              640,
+              485
+            ],
+            [
+              610,
+              420
+            ],
+            [
+              555,
+              360
+            ]
+          ]
+        },
+        {
+          "id": "SG-GEÇ-01",
+          "kind": "personnel",
+          "type": "4 personel · Geçit kontrol timi",
+          "task": "Geçit kontrol timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            -172,
+            -38
+          ],
+          "destination": "BATI GÖZETLEME NOKTASI",
+          "target": [
+            495,
+            340
+          ],
+          "speed": 1.15,
+          "offset": 130,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 4
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              495,
+              340
+            ],
+            [
+              625,
+              300
+            ],
+            [
+              745,
+              360
+            ],
+            [
+              720,
+              475
+            ],
+            [
+              565,
+              510
+            ],
+            [
+              470,
+              435
+            ]
+          ],
+          "people": 4
+        },
+        {
+          "id": "SG-DAĞ-02",
+          "kind": "personnel",
+          "type": "3 personel · Dağ gözetleme timi",
+          "task": "Dağ gözetleme timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            -172,
+            20
+          ],
+          "destination": "KUZEY GEÇİT NOKTASI",
+          "target": [
+            620,
+            145
+          ],
+          "speed": 1.15,
+          "offset": 800,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 3
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              540,
+              645
+            ],
+            [
+              600,
+              565
+            ],
+            [
+              640,
+              485
+            ],
+            [
+              610,
+              420
+            ],
+            [
+              555,
+              360
+            ],
+            [
+              585,
+              290
+            ],
+            [
+              645,
+              225
+            ],
+            [
+              620,
+              145
+            ],
+            [
+              560,
+              105
+            ],
+            [
+              510,
+              170
+            ],
+            [
+              535,
+              255
+            ],
+            [
+              480,
+              345
+            ],
+            [
+              500,
+              445
+            ],
+            [
+              460,
+              535
+            ]
+          ],
+          "people": 3
+        },
+        {
+          "id": "SG-TRM-01",
+          "kind": "fixed",
+          "type": "Termal gözlem noktası",
+          "task": "Kuzey termal gözlem noktası",
+          "icon": "thermal",
+          "color": "#edcd8f",
+          "label": [
+            22,
+            -45
+          ],
+          "destination": "KUZEY TERMAL GÖZLEM NOKTASI",
+          "target": [
+            668,
+            200
+          ],
+          "speed": 0,
+          "offset": 0,
+          "values": {
+            "pan": {
+              "base": 28,
+              "swing": 6,
+              "rate": 0.025
+            },
+            "temperature": {
+              "base": -4.2,
+              "swing": 0.4,
+              "rate": 0.02
+            },
+            "voltage": 24.2,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "pan",
+              "label": "BAKIŞ AÇISI",
+              "unit": "°",
+              "digits": 0
+            },
+            {
+              "key": "temperature",
+              "label": "SICAKLIK",
+              "unit": "°C",
+              "digits": 1
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "fixed": [
+            668,
+            200
+          ]
+        }
+      ],
+      "highlight": {
+        "label": "TERMAL",
+        "asset": "SG-TRM-01",
+        "key": "signal",
+        "unit": "%"
+      },
+      "heroMetrics": [
+        {
+          "asset": "SG-TRM-01",
+          "metric": {
+            "key": "temperature",
+            "label": "GEÇİT SICAKLIĞI",
+            "unit": "°C",
+            "digits": 1
+          }
+        },
+        {
+          "asset": "SG-TRM-01",
+          "metric": {
+            "key": "signal",
+            "label": "TERMAL SİNYAL",
+            "unit": "%",
+            "digits": 0
+          }
+        }
+      ],
+      "mix": {
+        "ground": 3,
+        "air": 0,
+        "personnel": 2,
+        "fixed": 1
+      },
+      "people": 7,
+      "composition": "3 kara · 2 tim · 1 sabit"
+    },
+    {
+      "id": "guneyova",
+      "code": "GO",
+      "number": "04",
+      "name": "Güneyova İkmal Bölgesi",
+      "short": "Güneyova",
+      "terrain": "Dağ eteği ve plato",
+      "description": "Yük ve akaryakıt sevki, depo hizmetleri, sağlık ve enerji desteği",
+      "seed": 19,
+      "origin": [
+        37,
+        33
+      ],
+      "baseElevation": 1090,
+      "phase": 105,
+      "wind": "KB 10 km/sa",
+      "visibility": "12,0 km",
+      "accent": "#c0afd9",
+      "palette": [
+        72,
+        72,
+        49
+      ],
+      "base": [
+        565,
+        455
+      ],
+      "helipad": [
+        770,
+        495
+      ],
+      "drone": [
+        905,
+        245,
+        175,
+        95
+      ],
+      "changedTarget": {
+        "name": "DOĞU SERVİS YOLU",
+        "x": 1060,
+        "y": 575
+      },
+      "peaks": [
+        [
+          0.1,
+          0.12,
+          0.028,
+          0.03,
+          650
+        ],
+        [
+          0.42,
+          0.01,
+          0.035,
+          0.012,
+          630
+        ],
+        [
+          0.79,
+          0.08,
+          0.035,
+          0.02,
+          850
+        ],
+        [
+          0.98,
+          0.57,
+          0.014,
+          0.04,
+          570
+        ],
+        [
+          0.49,
+          1.03,
+          0.07,
+          0.024,
+          450
+        ]
+      ],
+      "outer": [
+        [
+          160,
+          585
+        ],
+        [
+          320,
+          535
+        ],
+        [
+          470,
+          495
+        ],
+        [
+          620,
+          455
+        ],
+        [
+          790,
+          405
+        ],
+        [
+          930,
+          345
+        ],
+        [
+          1020,
+          245
+        ],
+        [
+          900,
+          170
+        ],
+        [
+          710,
+          175
+        ],
+        [
+          550,
+          240
+        ],
+        [
+          400,
+          290
+        ],
+        [
+          260,
+          360
+        ],
+        [
+          175,
+          470
+        ]
+      ],
+      "perimeter": [
+        [
+          330,
+          340
+        ],
+        [
+          630,
+          290
+        ],
+        [
+          850,
+          365
+        ],
+        [
+          820,
+          550
+        ],
+        [
+          480,
+          610
+        ],
+        [
+          300,
+          480
+        ]
+      ],
+      "supply": [
+        [
+          70,
+          660
+        ],
+        [
+          160,
+          585
+        ],
+        [
+          320,
+          535
+        ],
+        [
+          470,
+          495
+        ],
+        [
+          540,
+          475
+        ],
+        [
+          470,
+          495
+        ],
+        [
+          320,
+          535
+        ],
+        [
+          160,
+          585
+        ]
+      ],
+      "inner": [
+        [
+          430,
+          420
+        ],
+        [
+          520,
+          385
+        ],
+        [
+          620,
+          400
+        ],
+        [
+          710,
+          455
+        ],
+        [
+          640,
+          540
+        ],
+        [
+          520,
+          555
+        ],
+        [
+          425,
+          495
+        ]
+      ],
+      "targets": [
+        [
+          "KUZEY SEVK NOKTASI",
+          710,
+          175
+        ],
+        [
+          "DOĞU YOL KONTROLÜ",
+          930,
+          345
+        ],
+        [
+          "ANA İKMAL DEPOSU",
+          540,
+          475
+        ],
+        [
+          "PLATO GÖZETLEME SEKTÖRÜ",
+          1040,
+          210
+        ],
+        [
+          "İKMAL NİZAMİYE",
+          330,
+          340
+        ],
+        [
+          "LOJİSTİK KOMUTA BİNASI",
+          565,
+          390
+        ]
+      ],
+      "units": [
+        {
+          "id": "GO-YÜK-01",
+          "kind": "ground",
+          "type": "6×6 yük kamyonu",
+          "task": "Ana depo ikmal sevki",
+          "icon": "truck",
+          "color": "#75d9ef",
+          "label": [
+            20,
+            -52
+          ],
+          "destination": "KUZEY SEVK NOKTASI",
+          "target": [
+            710,
+            175
+          ],
+          "speed": 5.5,
+          "offset": 0,
+          "values": {
+            "fuel": 83,
+            "engine": {
+              "base": 80,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "cargo": 68,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "cargo",
+              "label": "YÜK DOLULUĞU",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              160,
+              585
+            ],
+            [
+              320,
+              535
+            ],
+            [
+              470,
+              495
+            ],
+            [
+              620,
+              455
+            ],
+            [
+              790,
+              405
+            ],
+            [
+              930,
+              345
+            ],
+            [
+              1020,
+              245
+            ],
+            [
+              900,
+              170
+            ],
+            [
+              710,
+              175
+            ],
+            [
+              550,
+              240
+            ],
+            [
+              400,
+              290
+            ],
+            [
+              260,
+              360
+            ],
+            [
+              175,
+              470
+            ]
+          ]
+        },
+        {
+          "id": "GO-TNK-02",
+          "kind": "ground",
+          "type": "Akaryakıt tankeri",
+          "task": "Akaryakıt sevki",
+          "icon": "tanker",
+          "color": "#75d9ef",
+          "label": [
+            -172,
+            22
+          ],
+          "destination": "ANA İKMAL DEPOSU",
+          "target": [
+            540,
+            475
+          ],
+          "speed": 4.7,
+          "offset": 290,
+          "values": {
+            "fuel": 86,
+            "engine": {
+              "base": 78,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "tank": 76,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "tank",
+              "label": "TANK DOLUMU",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              70,
+              660
+            ],
+            [
+              160,
+              585
+            ],
+            [
+              320,
+              535
+            ],
+            [
+              470,
+              495
+            ],
+            [
+              540,
+              475
+            ],
+            [
+              470,
+              495
+            ],
+            [
+              320,
+              535
+            ],
+            [
+              160,
+              585
+            ]
+          ]
+        },
+        {
+          "id": "GO-AMB-03",
+          "kind": "ground",
+          "type": "Arazi tipi ambulans",
+          "task": "Sağlık desteği",
+          "icon": "ambulance",
+          "color": "#75d9ef",
+          "label": [
+            22,
+            18
+          ],
+          "destination": "DOĞU YOL KONTROLÜ",
+          "target": [
+            930,
+            345
+          ],
+          "speed": 6.1,
+          "offset": 1150,
+          "values": {
+            "fuel": 91,
+            "engine": {
+              "base": 76,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "equipment": 95,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "equipment",
+              "label": "DONANIM ŞARJI",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              160,
+              585
+            ],
+            [
+              320,
+              535
+            ],
+            [
+              470,
+              495
+            ],
+            [
+              620,
+              455
+            ],
+            [
+              790,
+              405
+            ],
+            [
+              930,
+              345
+            ],
+            [
+              1020,
+              245
+            ],
+            [
+              900,
+              170
+            ],
+            [
+              710,
+              175
+            ],
+            [
+              550,
+              240
+            ],
+            [
+              400,
+              290
+            ],
+            [
+              260,
+              360
+            ],
+            [
+              175,
+              470
+            ]
+          ]
+        },
+        {
+          "id": "GO-FRK-04",
+          "kind": "ground",
+          "type": "Elektrikli forklift",
+          "task": "Depo yükleme ve boşaltma",
+          "icon": "forklift",
+          "color": "#75d9ef",
+          "label": [
+            -172,
+            -55
+          ],
+          "destination": "ANA İKMAL DEPOSU",
+          "target": [
+            540,
+            475
+          ],
+          "speed": 1.25,
+          "offset": 70,
+          "values": {
+            "battery": 81,
+            "load": 35,
+            "engine": {
+              "base": 42,
+              "swing": 1,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "battery",
+              "label": "BATARYA",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "load",
+              "label": "KALDIRMA YÜKÜ",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "engine",
+              "label": "MOTOR",
+              "unit": "°C",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              500,
+              480
+            ],
+            [
+              535,
+              460
+            ],
+            [
+              575,
+              465
+            ],
+            [
+              610,
+              500
+            ],
+            [
+              575,
+              535
+            ],
+            [
+              530,
+              525
+            ]
+          ]
+        },
+        {
+          "id": "GO-ÇEK-05",
+          "kind": "ground",
+          "type": "Arazi tipi çekici",
+          "task": "İkmal araçlarına teknik destek",
+          "icon": "recovery",
+          "color": "#75d9ef",
+          "label": [
+            22,
+            -48
+          ],
+          "destination": "DOĞU YOL KONTROLÜ",
+          "target": [
+            930,
+            345
+          ],
+          "speed": 4.5,
+          "offset": 770,
+          "values": {
+            "fuel": 79,
+            "engine": {
+              "base": 81,
+              "swing": 2,
+              "rate": 0.1
+            },
+            "winchLoad": 8,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "winchLoad",
+              "label": "VİNÇ YÜKÜ",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "SİNYAL",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              160,
+              585
+            ],
+            [
+              320,
+              535
+            ],
+            [
+              470,
+              495
+            ],
+            [
+              620,
+              455
+            ],
+            [
+              790,
+              405
+            ],
+            [
+              930,
+              345
+            ],
+            [
+              1020,
+              245
+            ],
+            [
+              900,
+              170
+            ],
+            [
+              710,
+              175
+            ],
+            [
+              550,
+              240
+            ],
+            [
+              400,
+              290
+            ],
+            [
+              260,
+              360
+            ],
+            [
+              175,
+              470
+            ]
+          ]
+        },
+        {
+          "id": "GO-İKM-01",
+          "kind": "personnel",
+          "type": "6 personel · İkmal timi",
+          "task": "İkmal timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            24,
+            12
+          ],
+          "destination": "LOJİSTİK KOMUTA BİNASI",
+          "target": [
+            565,
+            390
+          ],
+          "speed": 1.15,
+          "offset": 100,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 6
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              430,
+              420
+            ],
+            [
+              520,
+              385
+            ],
+            [
+              620,
+              400
+            ],
+            [
+              710,
+              455
+            ],
+            [
+              640,
+              540
+            ],
+            [
+              520,
+              555
+            ],
+            [
+              425,
+              495
+            ]
+          ],
+          "people": 6
+        },
+        {
+          "id": "GO-SĞL-02",
+          "kind": "personnel",
+          "type": "3 personel · Sağlık timi",
+          "task": "Sağlık timi",
+          "icon": "personnel",
+          "color": "#82e5bb",
+          "label": [
+            -172,
+            20
+          ],
+          "destination": "LOJİSTİK KOMUTA BİNASI",
+          "target": [
+            565,
+            390
+          ],
+          "speed": 1.15,
+          "offset": 30,
+          "values": {
+            "heart": {
+              "base": 88,
+              "swing": 4,
+              "rate": 0.1
+            },
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            },
+            "people": 3
+          },
+          "metrics": [
+            {
+              "key": "people",
+              "label": "TİM MEVCUDU",
+              "unit": "kişi",
+              "digits": 0
+            },
+            {
+              "key": "heart",
+              "label": "ORT. NABIZ",
+              "unit": "atım/dk",
+              "digits": 0
+            },
+            {
+              "key": "signal",
+              "label": "TELSİZ",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "route": [
+            [
+              430,
+              420
+            ],
+            [
+              470,
+              405
+            ],
+            [
+              500,
+              420
+            ],
+            [
+              475,
+              445
+            ],
+            [
+              435,
+              445
+            ]
+          ],
+          "people": 3
+        },
+        {
+          "id": "GO-JEN-01",
+          "kind": "fixed",
+          "type": "Saha jeneratörü",
+          "task": "İkmal bölgesi enerji noktası",
+          "icon": "generator",
+          "color": "#edcd8f",
+          "label": [
+            22,
+            20
+          ],
+          "destination": "İKMAL BÖLGESI ENERJI NOKTASI",
+          "target": [
+            665,
+            550
+          ],
+          "speed": 0,
+          "offset": 0,
+          "values": {
+            "load": {
+              "base": 62,
+              "swing": 2,
+              "rate": 0.035
+            },
+            "power": {
+              "base": 28,
+              "swing": 0.6,
+              "rate": 0.035
+            },
+            "fuel": 86,
+            "voltage": 230,
+            "signal": {
+              "base": 96,
+              "swing": 2,
+              "rate": 0.13
+            }
+          },
+          "metrics": [
+            {
+              "key": "power",
+              "label": "GÜÇ",
+              "unit": "kW",
+              "digits": 1
+            },
+            {
+              "key": "load",
+              "label": "YÜK",
+              "unit": "%",
+              "digits": 0
+            },
+            {
+              "key": "fuel",
+              "label": "YAKIT",
+              "unit": "%",
+              "digits": 0
+            }
+          ],
+          "fixed": [
+            665,
+            550
+          ]
+        }
+      ],
+      "highlight": {
+        "label": "JEN. YÜK",
+        "asset": "GO-JEN-01",
+        "key": "load",
+        "unit": "%"
+      },
+      "heroMetrics": [
+        {
+          "asset": "GO-TNK-02",
+          "metric": {
+            "key": "tank",
+            "label": "AKARYAKIT DOLUMU",
+            "unit": "%",
+            "digits": 0
+          }
+        },
+        {
+          "asset": "GO-JEN-01",
+          "metric": {
+            "key": "load",
+            "label": "JENERATÖR YÜKÜ",
+            "unit": "%",
+            "digits": 0
+          }
+        }
+      ],
+      "mix": {
+        "ground": 5,
+        "air": 0,
+        "personnel": 2,
+        "fixed": 1
+      },
+      "people": 9,
+      "composition": "5 kara · 2 tim · 1 sabit"
+    }
+  ],
+  "plants": {
+    "karatepe": {
+      "name": "Üs Isı ve Su Merkezi",
+      "initial": 62,
+      "target": 62,
+      "temp": 53,
+      "demand": 11,
+      "pressure": 3.4,
+      "capacity": 80,
+      "branches": [
+        "KARARGÂH",
+        "PERSONEL BLOKLARI",
+        "BAKIM HANGARI"
+      ]
+    },
+    "akvadi": {
+      "name": "Vadi Isı ve Su Merkezi",
+      "initial": 58,
+      "target": 60,
+      "temp": 50,
+      "demand": 8,
+      "pressure": 2.9,
+      "capacity": 60,
+      "branches": [
+        "KONAKLAMA",
+        "SAHRA REVİRİ",
+        "GÖZLEM NOKTASI"
+      ]
+    },
+    "sarpgecit": {
+      "name": "Geçit Isı ve Su Merkezi",
+      "initial": 64,
+      "target": 65,
+      "temp": 57,
+      "demand": 5,
+      "pressure": 3.8,
+      "capacity": 45,
+      "branches": [
+        "KONTROL NOKTASI",
+        "DAĞ BARINAĞI",
+        "KURTARMA GARAJI"
+      ]
+    },
+    "guneyova": {
+      "name": "İkmal Isı ve Su Merkezi",
+      "initial": 66,
+      "target": 65,
+      "temp": 48,
+      "demand": 16,
+      "pressure": 3.2,
+      "capacity": 110,
+      "branches": [
+        "İKMAL DEPOSU",
+        "SAĞLIK BİRİMİ",
+        "TEKNİK ATÖLYE"
+      ]
+    }
+  }
+}

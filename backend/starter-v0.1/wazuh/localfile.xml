@@ -1,0 +1,5 @@
+<!-- Add INSIDE an ossec_config element on the application VM's Wazuh agent. -->
+<localfile>
+  <log_format>json</log_format>
+  <location>/var/log/kalkan-1-backend/events.jsonl</location>
+</localfile>

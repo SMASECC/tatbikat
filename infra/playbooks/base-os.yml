@@ -1,0 +1,22 @@
+---
+- name: Configure the base packages of existing Ubuntu lab VMs
+  hosts: ubuntu
+  gather_facts: false
+  vars_files:
+    - ../site.example.yml
+  pre_tasks:
+    - name: Validate deployment configuration before contacting any VM
+      ansible.builtin.assert:
+        that:
+          - deployment_configured | bool
+          - "'REPLACE_ME' not in ansible_user"
+          - lab_profile == 'normal'
+        fail_msg: "Temel kurulum için gerçek SSH bilgileri ve normal lab profili gerekmektedir."
+      delegate_to: localhost
+      become: false
+      run_once: true
+    - name: Gather target operating-system facts
+      ansible.builtin.setup:
+  become: true
+  roles:
+    - base_os
