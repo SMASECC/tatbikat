@@ -1,6 +1,6 @@
 # Uygulama ve prova kabul listesi
 
-Bu liste kurulum tamamlandığında uygulanacaktır. Kaynak doğrulaması aşağıdaki maddelerin yapıldığı anlamına gelmemektedir. İlk canlı prova için durum **hazır değildir**.
+Bu liste kurulum tamamlandığında uygulanacaktır. Kaynak doğrulaması aşağıdaki maddelerin yapıldığı anlamına gelmemektedir. Kaynaklar ve kurulum kodu pakettedir; ilk canlı prova gerçek hostta kabul beklemektedir.
 
 ## Kurulum sırası
 
@@ -8,7 +8,7 @@ Bu liste kurulum tamamlandığında uygulanacaktır. Kaynak doğrulaması aşağ
 2. Wazuh, altı ajan ve manager'ın kendi izleme kaynakları kurulmalıdır. Saat eşitlemesi, auditd, SSH, FIM, web, uygulama ve FW kayıtları gerçek kaynaklarda doğrulanmalıdır.
 3. Zafiyetli servis ürünü/sürümü seçilmeli; sağlıklı ve zafiyetli imaj özetleri sabitlenmelidir. İlk shell'in svc-web olduğu ve özel anahtarın ilk yetkiyle okunamadığı sınanmalıdır.
 4. Ayrı lab anahtarları, sudo hatası, eski SSH yolu, pivot çıkışı ve uygulama rol fazlalığı profil değişkenlerine bağlanmalıdır. Gerçek yönetim anahtarları hedef VM'lere konulmamalıdır.
-5. İlk altı kırmızı takım scripti ve uygulama kimliği geçişi geliştirilmelidir. Önkoşul veya kanıt eksikse zincir durmalıdır.
+5. İlk altı kırmızı takım scripti ve uygulama kimliği geçişi lab/red ile lab/integrator_command.py üzerinden gerçek hedeflerde sınanmalıdır. Önkoşul veya kanıt eksikse zincir durmalıdır.
 6. Yeni Wazuh host/ağ kuralları gerçek pozitif/negatif loglarla test edilmelidir. Sonuçlar canlı Dashboard üzerinde ayrıca görülmelidir.
 7. Yeni API, OT modeli ve güncel frontend bağlanmalıdır. Gerçek olay zamanları, reji zamanlayıcısından bağımsız olmalıdır.
 8. Mavi takım müdahale araçları, kanıt dışa aktarımı, geri dönüş ve ikinci temiz tur doğrulanmalıdır.

@@ -40,13 +40,13 @@ Host ve ağ kayıtları kendiliğinden run_id içermemektedir. Korelasyon, kayı
 |---|---|---|
 | 110101–110106 | Mevcut uygulama etki kurallarıdır. | Güncel veri sözleşmesi ve canlı uygulama akışıyla yeniden doğrulanmalıdır. |
 | 110107–110112 | Mevcut müdahale, doğrulama, ret ve yeni tur kurallarıdır. | Olayın gerçek işlem sonucuyla eşleştiği doğrulanmalıdır. |
-| Yeni host/ağ korelasyonları | Henüz XML kuralı yazılmamıştır. | Web→shell, sudo, anahtar okuma, dış tünel, SSH ve kalıcılık için gerçek örnek kayıtlarla decoder/korelasyon hazırlanmalıdır. |
+| Yeni host/ağ kuralları | lab/wazuh/host_rules.xml ve network_decoder.xml içindedir. | 110201, 110211–110215, 110221–110222 gerçek Wazuh kurulumunda sınanacaktır. Süreç ve zaman bağlamı analist tarafından ilişkilendirilir. |
 
-Yeni kural ID'leri seçilen Wazuh sürümünün yüklü özel kurallarıyla çakışma kontrolünden sonra atanacaktır. Bu belgede çalışmayan bir kural numarası alarm gibi sunulmamaktadır. Yalnız port 11601, başarılı SSH veya sudo kullanımı kendi başına saldırı kanıtı sayılmayacaktır.
+Yeni kural ID'leri 1102xx aralığında atanmıştır; temiz Wazuh VM'sinde analysisd -t ve logtest ile çakışma/decoder kontrolü yapılmaktadır. Bu belgede çalışmayan bir kural numarası alarm gibi sunulmamaktadır. Yalnız port 11601, başarılı SSH veya sudo kullanımı kendi başına saldırı kanıtı sayılmayacaktır.
 
 Kurallar `/var/ossec/bin/wazuh-logtest` ile hem pozitif hem negatif örneklerde sınanmalıdır. Bu araç decoder ve kural eşleşmesini test etmektedir. [B3] Sonrasında gerçek ajan→manager→indexer→Dashboard yolu ayrı sınanmalıdır. Başarılı logtest sonucu canlı alarm teslimi kanıtı değildir. Ham kayıt erişimi için gerekli saklama ayarı da seçilmelidir; Dashboard alarm listesinin bütün ham kayıtları içerdiği varsayılmamalıdır.
 
-Mevcut `tools/watch_wazuh.py` yalnız 110101–110112 uygulama kurallarını kabul etmektedir. Yeni host/ağ kuralları için genişletilmeden tam erişim zinciri izleyicisi olarak kullanılamaz. Mevcut `tools/test_wazuh.py` de yalnız mevcut uygulama fixture'larını test etmektedir. Fixture örnekleri geçmiş zaman damgalı ve yapay kayıtlardır; gerçek tatbikat olayı gibi sunulmayacaktır.
+Eski v0.1 paketindeki `tools/watch_wazuh.py` yalnız 110101–110112 uygulama kurallarını kabul etmektedir. Yeni host/ağ kuralları için genişletilmeden tam erişim zinciri izleyicisi olarak kullanılamaz. Mevcut `tools/test_wazuh.py` de yalnız mevcut uygulama fixture'larını test etmektedir. Fixture örnekleri geçmiş zaman damgalı ve yapay kayıtlardır; gerçek tatbikat olayı gibi sunulmayacaktır.
 
 ## IOC, TTP ve olay bağlamı
 
@@ -88,3 +88,9 @@ Mevcut `blue.py contain` yalnız uygulama modelini sınırlandırmaktadır. Anah
 - [MITRE T0815 — Denial of View](https://attack.mitre.org/techniques/T0815/)
 
 Erişim tarihi: 31 Ekim 2026. Müdahale yolları, kabul hedefleri ve proje durumları projeye ait gereksinimlerdir.
+
+## 0.3.0 sürümündeki uygulama yolu
+
+Yeni deploy/blue.py, manager üzerindeki gerçek alerts.json dosyasını yetkili MGMT yönetim kanalıyla okur. Güncel turun gözlemlerini ve TTP adaylarını kanıt referanslarıyla dışa aktarır. Otomatik kesin IOC/APT sınıflandırması yapmaz. blue-contain, gerçek alarm bulunmadan ilerlemez; kontrol makbuzunu tur ve kısa geçerlilik süresiyle HMAC imzalar. APP imzasız veya yanlış turlu makbuzu reddeder. Bu, kontrol makinesinin doğrulama beyanıdır; Wazuh ürününün kriptografik alarm imzası olarak sunulmaz.
+
+Yeni müdahale kodu yalnız uygulama contain çağrısından ibaret değildir. lab/profiles.py ile DMZ sudo/anahtar/ajan, INT anahtar ve oturumları, FW bağlantı politikası/conntrack ve APP yazma yetkisi ayrı uygulanır. Ardından onaylı veri/proses geri yüklenir; bağımsız referans, kararlılık, SSH kapatma ve gerçek API 403 ret testi yapılır. Kaynak kod pakettedir; tam sekiz VM provası kullanıcı ortamında doğrulanacaktır.

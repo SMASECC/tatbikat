@@ -1,19 +1,14 @@
-# Uygulama sırası
+# Teslim ve kabul durumu
 
-| Sıra | İş | Durum |
-|---|---|---|
-| 1 | Güncel frontend ve backend başlangıç kaynaklarını tek Git deposunda toplama | Bu paket |
-| 2 | Tek topoloji kaynağı, envanter üretimi, doğrulama ve kaynak testleri | Bu paket |
-| 2a | Kırmızı/mavi takım bileşenleri, script durumu, kanıt ve müdahale gereksinimleri | scaffold.2 içinde tanımlandı; docs/scenarios ve scenarios/red-blue |
-| 3 | Gerçek host node, storage, template, NIC/bridge ve kapasite eşlemesi | Kullanıcı ortamı bilgileri beklenmektedir |
-| 4 | VM klonlama ve ilk ağ uygulaması rolü | Geliştirilecek |
-| 5 | Wazuh merkezi kurulum ve ajan kaydı | Geliştirilecek |
-| 6 | FastAPI, PostgreSQL ve OT modelinin ayrılması | Geliştirilecek |
-| 7 | Son frontend'in ortak canlı veriye bağlanması | Geliştirilecek |
-| 8 | Zafiyetli servis ürünü/sürümü ve gerçek log zinciri | Seçim ve doğrulama yapılacak |
-| 9 | Normal, tatbikat ve iyileştirilmiş profillerin uygulanması | Geliştirilecek |
-| 10 | Mavi takım müdahalesi, çoklu ekran provası ve temiz tur | Entegrasyon testi yapılacak |
+Kaynak ve kurulum otomasyonu 0.3.0-lab.1 içinde sunulmuştur. Çalışan kaynaklar lab/ ve deploy/ dizinlerindedir. Büyük imajlar ve araç ikilileri ilk kurulumda indirilir.
 
-Kurum içi Git servisi varsa bu depo orada özel erişimle tutulabilir. Uzak servis seçimi yapılmadığı için bu pakette origin adresi bulunmamaktadır. Git geçmişi bundle dosyasıyla taşınmaktadır.
+| İş | Durum |
+|---|---|
+| Portal, 11 kırmızı takım giriş noktası ve profil kodu | Kaynak hazır; tam VM provası beklenmektedir. |
+| Bağımsız OT, APP, güncel frontend bağlantısı | Yerel mTLS/HTTP testleri geçti; VM provası beklenmektedir. |
+| Proxmox VM/ağ otomasyonu ve Ansible | Kaynak ve sözdizimi kontrolü hazır; gerçek host kurulumu yapılmamıştır. |
+| Wazuh merkezi/ajan kurulumu, yeni kurallar ve decoder | Kaynak hazır; gerçek engine/alarm kabulü beklenmektedir. |
+| IOC/TTP incelemesi, imzalı Wazuh makbuzu ve OS/ağ müdahalesi | Kaynak hazır; gerçek olay provası beklenmektedir. |
+| Kopyala-yapıştır kurulum ve işletim rehberi | docs/delivery içinde hazırdır. |
 
-İlk gerçek kurulum işi, fiziksel sunucu envanteri üzerinden Proxmox şablonları ve bridge eşlemesini kesinleştirmektir. Wazuh ve saldırı zinciri aşamaları, kaynakları yalnız mevcut diye kurulmuş kabul edilmeyecektir.
+Bir sonraki iş yeni belge üretmek değildir; rehberi gerçek lab hostunda çalıştırmak, check ile altyapıyı ve 01–11 ile erişim zincirini doğrulamaktır.

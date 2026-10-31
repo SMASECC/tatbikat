@@ -1,0 +1,7 @@
+---
+- name: Deploy the complete marked KALKAN lab
+  hosts: all
+  gather_facts: false
+  become: true
+  roles:
+    - full_lab

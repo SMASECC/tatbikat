@@ -1,0 +1,70 @@
+<group name="kalkan1,lab,">
+  <rule id="110113" level="12">
+    <decoded_as>json</decoded_as>
+    <field name="app">^kalkan1$</field>
+    <field name="event_type">^telemetry.reference_timeout$</field>
+    <description>KALKAN: independent OT reference unavailable</description>
+  </rule>
+  <rule id="110200" level="0">
+    <decoded_as>json</decoded_as>
+    <field name="app">^kalkan_lab$</field>
+    <description>KALKAN dedicated lab service event</description>
+  </rule>
+  <rule id="110201" level="8">
+    <if_sid>110200</if_sid>
+    <field name="event_type">^portal.validation$</field>
+    <description>KALKAN DMZ validation process executed; correlate web and audit records</description>
+  </rule>
+  <rule id="110211" level="10">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">^k1_web_exec$</field>
+    <description>KALKAN DMZ service-account process execution</description>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+  <rule id="110212" level="8">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">^k1_root_exec$</field>
+    <field name="audit.auid" type="pcre2">^(4294967295|-1|unset)$</field>
+    <field name="audit.exe" type="pcre2">/python3(?:[.][0-9]+)?$</field>
+    <description>KALKAN DMZ privileged execution; correlate sudo and parent process</description>
+    <mitre><id>T1548.003</id></mitre>
+  </rule>
+  <rule id="110213" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">^k1_service_key_read$</field>
+    <description>KALKAN legacy service-key directory read</description>
+    <mitre><id>T1552.004</id></mitre>
+  </rule>
+  <rule id="110214" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">^k1_authorized_keys$</field>
+    <field name="audit.uid" type="pcre2">^(?!0$)[0-9]+$</field>
+    <description>KALKAN svc-sync SSH authorization changed</description>
+    <mitre><id>T1098.004</id></mitre>
+  </rule>
+  <rule id="110215" level="8">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">^k1_api_identity$</field>
+    <description>KALKAN integration identity file read; correlate SSH session</description>
+  </rule>
+  <rule id="110220" level="3">
+    <decoded_as>kalkan-network</decoded_as>
+    <description>KALKAN firewall connection event</description>
+  </rule>
+  <rule id="110221" level="10">
+    <if_sid>110220</if_sid>
+    <srcip>10.77.20.20</srcip>
+    <dstip>198.18.60.20</dstip>
+    <dstport>11601</dstport>
+    <description>KALKAN DMZ outbound pivot endpoint; verify process and tunnel</description>
+    <mitre><id>T1090</id></mitre>
+  </rule>
+  <rule id="110222" level="10">
+    <if_sid>110220</if_sid>
+    <srcip>10.77.20.20</srcip>
+    <dstip>10.77.30.20</dstip>
+    <dstport>22</dstport>
+    <description>KALKAN legacy DMZ to internal SSH path</description>
+    <mitre><id>T1021.004</id></mitre>
+  </rule>
+</group>

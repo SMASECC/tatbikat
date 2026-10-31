@@ -66,7 +66,7 @@ def validate(plan, root=ROOT):
     for source in logs.values():
         if source["host"] not in hosts or not source.get("requirements"):
             errors.append(f"Kayıt kaynağı geçersizdir: {source['id']}")
-    rule_ids = {int(r.attrib["id"]) for r in ET.parse(root / "backend/starter-v0.1/wazuh/kalkan_rules.xml").getroot()}
+    rule_ids = {int(r.attrib["id"]) for path in ('backend/starter-v0.1/wazuh/kalkan_rules.xml','lab/wazuh/host_rules.xml') for r in ET.parse(root / path).getroot()}
     for phase in plan["phases"]:
         if not set(phase["hosts"]) <= hosts or not set(phase["requires"]) <= set(components) or not set(phase["log_sources"]) <= set(logs):
             errors.append(f"Aşama host/bileşen/kayıt referansı eksiktir: {phase['id']}")
@@ -104,7 +104,7 @@ def table_text(value):
 
 def render_matrix(plan):
     lines = ["# Aşama, kanıt ve müdahale çizelgesi", "", "Bu dosya `scenarios/red-blue/requirements.json` verisinden `make scenario-plan` ile üretilmektedir.", "",
-             "**Durum: gereksinimler tanımlıdır; canlı senaryo hazır değildir.** Planlanan altı erişim scripti mevcut değildir. Etki ve müdahale istemcileri eski uygulama modelinde bulunmaktadır. Host/ağ işlemleri ve canlı entegrasyon ayrıca geliştirilecektir.", "",
+             "**Durum: kaynak kod ve kurulum otomasyonu pakettedir; tam VM/Wazuh provası henüz doğrulanmamıştır.** Altı erişim scripti, beş etki scripti, bağımsız model ve mavi takım araçları bulunmaktadır. Büyük imajlar ve Ligolo ikilileri resmi kaynaklardan kurulumda indirilir.", "",
              "Sunum adımı 1–10 olarak gösterilmiştir. İlk erişimin altı teknik işlemi aynı sunum adımına bağlıdır. Her adımın hedef anlatım süresi 30 saniyedir; gerçek işlem/tespit süresi değildir.", "",
              "## Kırmızı takım / işlem ve kanıt", "",
              "| Aşama / sunum | Script ve kaynak durumu | Önkoşul | Kayıt kaynakları / mevcut uygulama kuralı |",
@@ -115,8 +115,10 @@ def render_matrix(plan):
             source = "Analist / reji kontrolü; kurulum beklenmektedir."
         elif script["status"] == "planned":
             source = f"`{script['name']}` — planlanan isim; dosya yoktur."
-        else:
+        elif script['status']=='model_only':
             source = f"`{script['name']} {script['command']}` — model istemcisi; canlı OS/ağ işlemi değildir."
+        else:
+            source=f"`{script['path']}`"+(f" · `{script['command']}`" if script.get('command') else '')+' — kaynak pakette; tam VM provası beklenmektedir.'
         rules = ", ".join(map(str, phase["existing_rule_ids"])) or "Yeni host/ağ korelasyonu veya temel kayıt incelemesi gerekmektedir."
         cells = [f"{phase['id']} · {phase['title']} / {phase['presentation_stage'] + 1}", source,
                  phase["entry_condition"], ", ".join(phase["log_sources"]) + " / " + rules]

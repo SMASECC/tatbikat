@@ -17,7 +17,7 @@ def git(*args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT.parent / "KALKAN-1_Kaynak_Deposu_v0.2.0.zip")
+    parser.add_argument("--output", type=Path, default=ROOT.parent / "KALKAN-1_Tam_Paket_v0.3.0.zip")
     args = parser.parse_args()
     if git("status", "--porcelain"):
         raise SystemExit("Paketlemeden önce kaynak değişikliklerini commit edin.")
@@ -55,6 +55,10 @@ def main():
             raise SystemExit("Git bundle geri yükleme kontrolü başarısızdır.")
         entries = {name: (ROOT / name).read_bytes() for name in files}
         entries["dist/frontend/index.html"] = frontend.read_bytes()
+        live=ROOT/'dist/live/index.html'
+        if hashlib.sha256(live.read_bytes()).hexdigest()!=report['live_frontend_sha256']:
+            raise SystemExit('Canlı frontend kontrol sonrasında değişmiştir.')
+        entries['dist/live/index.html']=live.read_bytes()
         entries["kalkan-1.bundle"] = bundle.read_bytes()
         entries["verification/check-report.json"] = report_path.read_bytes()
         ansible_report = ROOT / "build/ansible-report.json"
@@ -66,6 +70,8 @@ def main():
         release = {"project": "KALKAN-1", "version": version, "git_commit": commit, "git_tag": tag,
                    "git_bundle_restore_verified": True, "deployment_status": "not_deployed",
                    "test_scope": report["scope"], "frontend_sha256": report["frontend_sha256"],
+                   "live_frontend_sha256":report['live_frontend_sha256'],
+                   "not_verified":report['unverified'],
                    "contents": "source, approved frontend build, git history, review plans, local verification"}
         entries["RELEASE.json"] = (json.dumps(release, ensure_ascii=False, indent=2) + "\n").encode()
         checksums = {name: hashlib.sha256(data).hexdigest() for name, data in entries.items()}

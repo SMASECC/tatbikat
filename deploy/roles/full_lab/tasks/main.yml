@@ -1,0 +1,174 @@
+---
+- name: Read the cloud-init lab marker before changing the VM
+  ansible.builtin.slurp:
+    src: /etc/kalkan/lab-marker.json
+  register: lab_marker
+- name: Require the correct dedicated lab VM
+  ansible.builtin.assert:
+    that:
+      - (lab_marker.content | b64decode | from_json).lab_id == 'KALKAN-1'
+      - (lab_marker.content | b64decode | from_json).name == inventory_hostname
+- name: Install common operating-system packages
+  ansible.builtin.apt:
+    name: [python3, openssh-server, sudo, curl, ca-certificates, rsync, qemu-guest-agent, auditd, audispd-plugins, chrony, rsyslog, nftables, conntrack, gnupg, tar]
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+- name: Install HTTPS proxy on the three application VMs
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+  when: inventory_hostname in ['DMZ-PORTAL-01','KKBS-APP-01','OT-SIM-01']
+- name: Create the application directory
+  ansible.builtin.file:
+    path: /opt/kalkan
+    state: directory
+    mode: '0755'
+- name: Install the source and current live frontend
+  ansible.builtin.unarchive:
+    src: '{{ source_archive }}'
+    dest: /opt/kalkan
+- name: Copy only this VM's generated configuration
+  ansible.builtin.copy:
+    src: '{{ node_bundle_dir }}/{{ inventory_hostname }}.json'
+    dest: /root/kalkan-node.json
+    mode: '0600'
+  no_log: true
+- name: Create the tool directory
+  ansible.builtin.file:
+    path: /opt/kalkan/bin
+    state: directory
+    mode: '0755'
+- name: Install the verified Ligolo binary
+  ansible.builtin.copy:
+    src: '{{ cache_dir }}/ligolo-{{ "proxy" if inventory_hostname == "KALI-RED-01" else "agent" }}'
+    dest: '/opt/kalkan/bin/ligolo-{{ "proxy" if inventory_hostname == "KALI-RED-01" else "agent" }}'
+    mode: '0755'
+  when: inventory_hostname in ['KALI-RED-01','DMZ-PORTAL-01']
+- name: Configure services, TLS and the normal lab profile
+  ansible.builtin.command: python3 -m lab.node_setup --bundle /root/kalkan-node.json
+  args:
+    chdir: /opt/kalkan
+  changed_when: true
+  no_log: true
+- name: Enable base services
+  ansible.builtin.systemd_service:
+    name: '{{ item }}'
+    enabled: true
+    state: started
+  loop: [qemu-guest-agent, auditd, rsyslog, chrony]
+- name: Set the Wazuh indexer kernel budget
+  ansible.builtin.copy:
+    dest: /etc/sysctl.d/90-wazuh.conf
+    content: "vm.max_map_count=262144\n"
+    mode: '0644'
+  when: inventory_hostname == 'WAZUH-01'
+- name: Apply the indexer kernel budget
+  ansible.builtin.command: sysctl -w vm.max_map_count=262144
+  changed_when: true
+  when: inventory_hostname == 'WAZUH-01'
+- name: Copy the downloaded Wazuh assistant
+  ansible.builtin.copy:
+    src: '{{ cache_dir }}/wazuh-install.sh'
+    dest: /root/wazuh-install.sh
+    mode: '0700'
+  when: inventory_hostname == 'WAZUH-01'
+- name: Install Wazuh all-in-one if not already installed
+  ansible.builtin.command: bash /root/wazuh-install.sh -a
+  args:
+    chdir: /root
+    creates: /var/ossec/bin/wazuh-control
+  no_log: true
+  when: inventory_hostname == 'WAZUH-01'
+- name: Install the existing application rules
+  ansible.builtin.copy:
+    src: '{{ project_root }}/backend/starter-v0.1/wazuh/kalkan_rules.xml'
+    dest: /var/ossec/etc/rules/kalkan_application.xml
+    owner: wazuh
+    group: wazuh
+    mode: '0640'
+  when: inventory_hostname == 'WAZUH-01'
+- name: Install the lab CA dashboard certificate
+  ansible.builtin.copy:
+    remote_src: true
+    src: '/etc/kalkan/tls/server.{{ item.extension }}'
+    dest: '/etc/wazuh-dashboard/certs/kalkan.{{ item.extension }}'
+    owner: root
+    group: wazuh-dashboard
+    mode: '0640'
+  loop:
+    - {extension: crt}
+    - {extension: key}
+  no_log: true
+  when: inventory_hostname == 'WAZUH-01'
+- name: Select the dashboard certificate
+  ansible.builtin.lineinfile:
+    path: /etc/wazuh-dashboard/opensearch_dashboards.yml
+    regexp: '^server.ssl.{{ item.setting }}:'
+    line: 'server.ssl.{{ item.setting }}: /etc/wazuh-dashboard/certs/kalkan.{{ item.extension }}'
+  loop:
+    - {setting: certificate, extension: crt}
+    - {setting: key, extension: key}
+  when: inventory_hostname == 'WAZUH-01'
+- name: Restart the Wazuh dashboard
+  ansible.builtin.systemd_service:
+    name: wazuh-dashboard
+    state: restarted
+  when: inventory_hostname == 'WAZUH-01'
+- name: Install host and network rules and decoder
+  ansible.builtin.copy:
+    src: '{{ project_root }}/lab/wazuh/{{ item.source }}'
+    dest: '/var/ossec/etc/{{ item.destination }}'
+    owner: wazuh
+    group: wazuh
+    mode: '0640'
+  loop:
+    - {source: host_rules.xml, destination: rules/kalkan_hosts.xml}
+    - {source: network_decoder.xml, destination: decoders/kalkan_network.xml}
+  when: inventory_hostname == 'WAZUH-01'
+- name: Restart the Wazuh manager after validating its rules
+  ansible.builtin.command: /var/ossec/bin/wazuh-analysisd -t
+  changed_when: false
+  when: inventory_hostname == 'WAZUH-01'
+- name: Start the Wazuh manager
+  ansible.builtin.systemd_service:
+    name: wazuh-manager
+    state: restarted
+    enabled: true
+  when: inventory_hostname == 'WAZUH-01'
+- name: Test the new rules with the actual Wazuh engine
+  ansible.builtin.command: python3 /opt/kalkan/lab/wazuh/test_rules.py
+  changed_when: false
+  when: inventory_hostname == 'WAZUH-01'
+- name: Copy the Wazuh signing key
+  ansible.builtin.copy:
+    src: '{{ cache_dir }}/GPG-KEY-WAZUH'
+    dest: /usr/share/keyrings/wazuh.asc
+    mode: '0644'
+  when: inventory_hostname not in ['KALI-RED-01','WAZUH-01']
+- name: Configure the authenticated Wazuh package repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/wazuh.list
+    content: "deb [signed-by=/usr/share/keyrings/wazuh.asc] https://packages.wazuh.com/4.x/apt/ stable main\n"
+    mode: '0644'
+  when: inventory_hostname not in ['KALI-RED-01','WAZUH-01']
+- name: Install the selected Wazuh agent version
+  ansible.builtin.apt:
+    name: wazuh-agent=4.14.9-1
+    state: present
+    update_cache: true
+  environment:
+    WAZUH_MANAGER: '10.77.50.20'
+    WAZUH_REGISTRATION_SERVER: '10.77.50.20'
+    WAZUH_AGENT_NAME: '{{ inventory_hostname }}'
+  when: inventory_hostname not in ['KALI-RED-01','WAZUH-01']
+- name: Configure real host log collection and audit watches
+  ansible.builtin.command: python3 -m lab.node_setup --agent
+  args:
+    chdir: /opt/kalkan
+  changed_when: true
+  when: inventory_hostname not in ['KALI-RED-01','WAZUH-01']
+- name: Remove the per-node installation payload
+  ansible.builtin.file:
+    path: /root/kalkan-node.json
+    state: absent

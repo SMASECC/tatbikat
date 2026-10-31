@@ -1,0 +1,5 @@
+<decoder name="kalkan-network">
+  <prematch>K1_NET_</prematch>
+  <regex type="pcre2">K1_NET_(ALLOW|DROP).*SRC=(\S+) DST=(\S+).*PROTO=(\w+).*SPT=(\d+) DPT=(\d+)</regex>
+  <order>action,srcip,dstip,protocol,srcport,dstport</order>
+</decoder>

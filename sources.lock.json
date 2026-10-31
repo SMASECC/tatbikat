@@ -13,5 +13,12 @@
     "version": "0.1.0",
     "mode": "application_effect_emulation"
   },
-  "source_date": "2026-10-31"
+  "source_date": "2026-10-31",
+  "live_lab": {
+    "version": "0.3.0-lab.1",
+    "entrypoint": "deploy/kalkan.py",
+    "frontend": "dist/live/index.html",
+    "runtime": "Python stdlib + SQLite WAL + HTTPS polling",
+    "validation": "local tests; full Proxmox/Wazuh acceptance required"
+  }
 }
