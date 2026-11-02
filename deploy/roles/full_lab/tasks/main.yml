@@ -19,6 +19,12 @@
     name: nginx
     state: present
   when: inventory_hostname in ['DMZ-PORTAL-01','KKBS-APP-01','OT-SIM-01']
+- name: Install the isolated lab DNS forwarder
+  ansible.builtin.apt:
+    name: dnsmasq
+    state: present
+    policy_rc_d: 101
+  when: inventory_hostname == 'FW-01'
 - name: Create the application directory
   ansible.builtin.file:
     path: /opt/kalkan

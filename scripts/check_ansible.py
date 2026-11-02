@@ -44,10 +44,14 @@ def main():
     if len(json.loads(result.stdout)["_meta"]["hostvars"]) != 8:
         raise SystemExit("Ansible envanterinde sekiz VM bulunmalıdır.")
     results.append({"check": "inventory_8_vms", "passed": True})
+    environment["ANSIBLE_CONFIG"] = str(ROOT / "deploy/ansible.cfg")
+    subprocess.run([executable, "-i", "localhost,", str(ROOT / "deploy/playbooks/site.yml"), "--syntax-check"],
+                   cwd=ROOT, env=environment, check=True, timeout=30)
+    results.append({"playbook": "full_lab", "check": "syntax", "passed": True})
     report = {"status": "passed", "scope": "syntax_inventory_only" if not args.guard_runtime else "syntax_inventory_local_guard_only",
               "guard_runtime": "not_run" if not args.guard_runtime else "passed", "checks": results}
     (ROOT / "build/ansible-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("PASS: 2 playbook sözdizimi ve 8 VM envanteri doğrulandı. Yerel koruma testi: " + report["guard_runtime"])
+    print("PASS: 3 playbook sözdizimi ve 8 VM envanteri doğrulandı. Yerel koruma testi: " + report["guard_runtime"])
 
 
 if __name__ == "__main__":

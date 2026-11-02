@@ -2,6 +2,8 @@
 
 Sürüm: **0.3.0-lab.1** · 31 Ekim 2026
 
+Git deposundan kurulum için güncel [tek komut rehberini](../git-install.md) kullanabilirsiniz. Aşağıdaki ZIP/USB adımları alternatif aktarım yoludur. `install.sh` bağımlılık, kurulum ve servis kabulünü birleştirir; fiziksel lab provası ayrıca gereklidir.
+
 Bu rehber temiz bir **Proxmox VE 9.x x86-64** hosttan başlayarak sekiz VM'li labı kurmaktadır. İlk kurulum internet erişimi gerektirmektedir. Ürün kaynakları, saldırı/müdahale scriptleri, Ansible otomasyonu ve güncel arayüz pakettedir. Ubuntu/Kali imajları, Ligolo ikilileri ve işletim sistemi/Wazuh paketleri büyük dosyalar oldukları için kurulumda resmi kaynaklardan indirilmektedir; bunlar ZIP içine gömülü değildir. Hazırlık aşaması dosya özetlerini denetleyip yerel kilit oluşturmaktadır.
 
 Bu teslimin yazılım testleri yerel ortamda yapılmıştır. Gerçek Proxmox ve Wazuh üzerinde sekiz VM'nin kurulumu ve tüm erişim zincirinin provası bu ortamda yapılmamıştır. Aşağıdaki kabul komutları bunu kullanıcının labında doğrulamaktadır. Kaynak paketi ile canlı ortam kabulü ayrı tutulmaktadır.

@@ -136,7 +136,13 @@ def configure_agent(name):
     existing={node.findtext('location') for node in root.findall('localfile')}
     locations=[('/var/log/audit/audit.log','audit'),('/var/log/auth.log','syslog')]
     if name=='FW-01':locations.append(('/var/log/kern.log','syslog'))
-    for path in Path('/var/log/kalkan').glob('*.jsonl'):locations.append((str(path),'json'))
+    # Register configured sources even if their first event has not been written.
+    # Otherwise a service that starts late is never collected after installation.
+    service_logs={'DMZ-PORTAL-01':'portal.jsonl','KKBS-INT-01':'integration.jsonl',
+                  'KKBS-APP-01':'events.jsonl','OT-SIM-01':'ot.jsonl'}
+    paths={str(path) for path in Path('/var/log/kalkan').glob('*.jsonl')}
+    if name in service_logs:paths.add('/var/log/kalkan/'+service_logs[name])
+    locations.extend((path,'json') for path in sorted(paths))
     for location,kind in locations:
         if location not in existing:
             node=ET.SubElement(root,'localfile');ET.SubElement(node,'log_format').text=kind;ET.SubElement(node,'location').text=location
@@ -156,7 +162,9 @@ def configure_agent(name):
         audit += ['-w /home/svc-sync/.ssh/authorized_keys -p wa -k k1_authorized_keys',
                   '-w /etc/kalkan/integration/identity.json -p r -k k1_api_identity']
     put('/etc/audit/rules.d/70-kalkan.rules','\n'.join(audit)+'\n')
-    command('augenrules','--load');command('systemctl','restart','wazuh-agent')
+    command('augenrules','--load')
+    command('systemctl','enable','wazuh-agent')
+    command('systemctl','restart','wazuh-agent')
 
 
 if __name__=='__main__':

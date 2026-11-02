@@ -1,10 +1,12 @@
 # KALKAN-1 tam lab kaynak paketi
 
-**Sürüm: 0.3.0-lab.1**
+**Sürüm: 0.3.0-lab.2**
 
 Bu teslim güncel arayüzü, bağımsız OT modelini, gerçek Linux erişim zincirini, mavi takım araçlarını, Wazuh kurallarını ve Proxmox/Ansible kurulum otomasyonunu içermektedir. Kaynak ve yerel test paketi hazırlanmıştır. Sekiz VM'nin gerçek Proxmox/Wazuh üzerindeki tam kurulumu bu geliştirme ortamında doğrulanmamıştır. Kurulum kabul araçları bunu kullanıcı ortamında sınamaktadır.
 
 ## Buradan başlayın
+
+[Git'ten tek komutla Proxmox kurulumu](docs/git-install.md): `install.sh` host ön kontrolünü, bağımlılıkları, VM/servis kurulumunu ve servis kabulünü sırayla çalıştırır. Özel depoya fiziksel sunucudan Git okuma izni gerekir. Gerçek Proxmox provası henüz doğrulanmamıştır.
 
 [Kopyala-yapıştır seviyesinde kurulum rehberi](docs/delivery/KALKAN-1_Kurulum_Rehberi_v0.3.0.md)
 

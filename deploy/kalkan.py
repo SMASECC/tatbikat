@@ -7,6 +7,7 @@ import hmac
 import json
 import os
 from pathlib import Path
+import re
 import shlex
 import shutil
 import subprocess
@@ -93,29 +94,66 @@ def provision_vm(vm,cfg,store,directory):
         run('qm','set',vmid,'--ipconfig'+str(index),ipcfg)
     current=run('qm','config',vmid).stdout
     if 'scsi0:' not in current:
-        image=LOCAL/'cache'/('kali.img' if vm['template']=='kali' else 'ubuntu.img')
-        run('qm','importdisk',vmid,str(image),cfg['storage'],'--format','raw')
-        current=run('qm','config',vmid).stdout
-        volume=next(line.split(': ',1)[1].split(',')[0] for line in current.splitlines() if line.startswith('unused'))
+        volume=imported_volume(current,vmid,cfg['storage'])
+        if volume is None:
+            image=LOCAL/'cache'/('kali.img' if vm['template']=='kali' else 'ubuntu.img')
+            run('qm','importdisk',vmid,str(image),cfg['storage'],'--format','raw')
+            volume=imported_volume(run('qm','config',vmid).stdout,vmid,cfg['storage'])
+        if volume is None:raise RuntimeError('İçe aktarılan VM diski doğrulanamadı: '+vmid)
         run('qm','set',vmid,'--scsi0',volume)
-        run('qm','resize',vmid,'scsi0',str(vm['disk_gib'])+'G')
+    # Retry also completes an interrupted attach/resize without importing twice.
+    resize_disk(vm,run('qm','config',vmid).stdout)
     if 'ide2:' not in current:run('qm','set',vmid,'--ide2',cfg['storage']+':cloudinit')
     name='kalkan-'+vmid+'.yaml';(directory/name).write_text(cloud_init(vm,(LOCAL/'keys/management.pub').read_text().strip()))
     run('qm','set',vmid,'--cicustom','user='+store+':snippets/'+name,'--nameserver',cfg['bootstrap_dns'],'--boot','order=scsi0')
     if 'running' not in run('qm','status',vmid).stdout:run('qm','start',vmid)
 
 
+def imported_volume(config,vmid,storage):
+    volumes=[line.split(': ',1)[1].split(',')[0] for line in config.splitlines() if re.match(r'^unused\d+: ',line)]
+    if not volumes:return None
+    if len(volumes)!=1:raise RuntimeError('Birden fazla kullanılmayan disk var; elle inceleyin: '+vmid)
+    volume=volumes[0]
+    # LVM/ZFS and directory-backed Proxmox VM volume names include the VMID.
+    if not volume.startswith(storage+':') or not re.search(r'(?:^|[/ :])(?:vm|base)-'+re.escape(vmid)+r'-disk-\d+(?:\.(?:raw|qcow2|vmdk))?$',volume):
+        raise RuntimeError('Kullanılmayan diskin sahipliği doğrulanamadı: '+vmid)
+    return volume
+
+
+def resize_disk(vm,config):
+    disk=next((line for line in config.splitlines() if line.startswith('scsi0: ')), '')
+    size=re.search(r'(?:,|\s)size=(\d+(?:\.\d+)?)([KMGT]?)\b',disk)
+    if not size:raise RuntimeError('VM disk boyutu okunamadı: '+vm['name'])
+    current=float(size[1])*1024**('KMGT'.index(size[2])+1 if size[2] else 0)
+    wanted=vm['disk_gib']*1024**3
+    if current>wanted:raise RuntimeError('VM diski plandan büyük; otomatik küçültülmez: '+vm['name'])
+    if current<wanted:run('qm','resize',str(vm['vmid']),'scsi0',str(vm['disk_gib'])+'G')
+
+
+def record_host_key(name,public):
+    parts=public.strip().split()
+    if len(parts)<2 or parts[0]!='ssh-ed25519':raise RuntimeError('Guest agent geçerli SSH anahtarı döndürmedi: '+name)
+    ip=VM[name]['ansible_host'];entry=ip+' '+parts[0]+' '+parts[1]
+    known=LOCAL/'known_hosts';known.touch(mode=0o600,exist_ok=True)
+    existing=known.read_text().splitlines()
+    matches=[line for line in existing if line.startswith(ip+' ')]
+    if matches and entry not in matches:raise RuntimeError('VM SSH anahtarı değişmiş; gerçek VM kimliğini inceleyin: '+name)
+    if not matches:
+        with known.open('a') as output:output.write(entry+'\n')
+
+
 def wait_for_vm(name):
     ip=VM[name]['ansible_host'];deadline=time.monotonic()+900
     known=LOCAL/'known_hosts';known.touch(mode=0o600,exist_ok=True)
     while time.monotonic()<deadline:
-        scan=run('ssh-keyscan','-T','3','-t','ed25519',ip,check=False)
-        if scan.returncode==0 and scan.stdout.strip():
-            existing=known.read_text()
-            if not any(line.startswith(ip+' ') for line in existing.splitlines()):
-                with known.open('a') as output:output.write(scan.stdout)
-            result=ssh(name,'cloud-init status --wait',check=False)
-            if result.returncode in (0,2):
+        # Obtain identity through the hypervisor, not an untrusted network scan.
+        scan=run('qm','guest','exec',str(VM[name]['vmid']),'--timeout','15','--','cat','/etc/ssh/ssh_host_ed25519_key.pub',check=False)
+        data=json.loads(scan.stdout) if scan.returncode==0 else {}
+        if data.get('exitcode')==0 and data.get('out-data'):
+            record_host_key(name,data['out-data'])
+            result=ssh(name,'timeout 30 cloud-init status --wait',check=False)
+            if result.returncode==2:raise RuntimeError(name+' cloud-init degraded; cloud-init status --long ve günlükleri inceleyin.')
+            if result.returncode==0:
                 if ssh(name,'command -v python3 && command -v rsync',check=False).returncode==0:
                     print('BOOT PASS:',name,flush=True);return
         time.sleep(5)
@@ -134,6 +172,49 @@ def archive_sources():
 
 def install():
     cfg=plan();prepare_artifacts()
+    try:
+        install_configured(cfg)
+    finally:
+        # Even a failed first boot/playbook must not leave temporary Internet NAT.
+        if Path('/etc/kalkan-host/config.json').exists():
+            try:
+                if (LOCAL/'known_hosts').exists():guest_maintenance(False,check=False)
+            finally:
+                cfg['maintenance']=False;write_private(LOCAL/'deployment.json',cfg);host.network(cfg)
+
+
+def guest_maintenance(enabled,check=True):
+    # Existing FW normal profile blocks package downloads on a retry. Reopen only
+    # the marked firewall VM and only for the duration of installation.
+    code='''import json,sys
+from pathlib import Path
+p=Path('/etc/kalkan/profile.json')
+if not p.exists():sys.exit(0)
+sys.path.insert(0,'/opt/kalkan')
+from lab.firewall import apply
+from lab.common import write_private
+marker=json.loads(Path('/etc/kalkan/lab-marker.json').read_text())
+if marker.get('lab_id')!='KALKAN-1' or marker.get('name')!='FW-01':raise RuntimeError('FW marker mismatch')
+cfg=json.loads(p.read_text());cfg.update(maintenance=ENABLED,enrollment=ENABLED)
+apply('FW-01',cfg['profile'],cfg['maintenance'],cfg['enrollment'])
+write_private(p,cfg)
+'''.replace('ENABLED',repr(enabled))
+    result=ssh('FW-01','sudo python3 -c '+shlex.quote(code),check=check)
+    if not check and result.returncode:print('UYARI: FW geçici bakım profili kapatılamadı; host NAT kaldırılacak.',file=sys.stderr)
+
+
+def wait_for_app(timeout=180):
+    deadline=time.monotonic()+timeout
+    while True:
+        try:
+            result=api('/api/v1/snapshot')
+            if result.get('reference_connected'):return result
+        except (OSError,ValueError):pass
+        if time.monotonic()>=deadline:raise RuntimeError('APP/bağımsız OT verisi zamanında hazır olmadı.')
+        time.sleep(3)
+
+
+def install_configured(cfg):
     host.network(cfg)
     Path('/opt/kalkan-host').mkdir(exist_ok=True)
     shutil.copyfile(ROOT/'deploy/host.py','/opt/kalkan-host/host.py')
@@ -142,6 +223,7 @@ def install():
     run('systemctl','daemon-reload');run('systemctl','enable','kalkan-host-network')
     store,directory=snippets()
     provision_vm(VM['FW-01'],cfg,store,directory);wait_for_vm('FW-01')
+    guest_maintenance(True)
     for vm in TOPOLOGY['vms']:
         if vm['name']!='FW-01':provision_vm(vm,cfg,store,directory)
     for vm in TOPOLOGY['vms']:
@@ -159,6 +241,7 @@ def install():
     run(str(venv/'bin/python'),'-m','pip','install','--quiet','-r',str(ROOT/'requirements-infra.lock'),capture=False)
     environment=os.environ.copy();environment['ANSIBLE_CONFIG']=str(ROOT/'deploy/ansible.cfg')
     subprocess.run([str(venv/'bin/ansible-playbook'),'-i',str(LOCAL/'full-inventory.json'),str(ROOT/'deploy/playbooks/site.yml'),'-e','@'+str(LOCAL/'full-vars.json')],cwd=ROOT,env=environment,check=True)
+    wait_for_app()
     result=api('/api/v1/white/reset',{})
     for name in VM:profile_vm(name,'normal',result['run_id'])
     for vm in TOPOLOGY['vms']:
