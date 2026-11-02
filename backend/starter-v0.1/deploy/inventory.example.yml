@@ -1,7 +1,0 @@
-all:
-  children:
-    kalkan_backend:
-      hosts:
-        kalkan-white:
-          ansible_host: 10.77.10.90
-          ansible_user: kalkanops

@@ -32,7 +32,7 @@ def render(topology, policy, output):
     for filename, value in (("inventory.json", inventory), ("proxmox-plan.json", plan)):
         (output / filename).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     lines = ["# Erişim politikası incelemesi", "", "Durum: yalnız inceleme; nftables veya Proxmox firewall kuralları uygulanmamıştır.", "",
-             "Varsayılan eylem: ret. Yerleşmiş bağlantı yanıtları, anti-spoofing ve DNAT/forward eşlemesi gerçek firewall rolünde tamamlanacaktır.", "",
+             "Varsayılan eylem: ret. Gerçek nftables uygulaması lab/firewall.py ve deploy/host.py içindedir; bu çıktı yalnız politika incelemesidir.", "",
              "| Kaynak | Hedef | Protokol / port | Profil / koşul | Açıklama |",
              "|---|---|---|---|---|"]
     for rule in policy["rules"]:
@@ -43,7 +43,7 @@ def render(topology, policy, output):
     lines += ["", "## Uygulama sınırları", "",
               "KKBS-INT-01 ve KKBS-APP-01 aynı L2 ağındadır. Aralarındaki trafik FW-01 üzerinden geçmez. VM firewall, guest firewall, API yetkilendirmesi ve IP/MAC kısıtları birlikte uygulanmalıdır.", "",
               "set:agent-vms: FW-01, MGMT-01, DMZ-PORTAL-01, KKBS-INT-01, KKBS-APP-01 ve OT-SIM-01. set:managed-vms: MGMT-01 dışındaki lab VM'leri. İstemci adresleri topology.json içindedir.", "",
-              "overbroad_api bir uygulama yetki profilidir. Firewall kuralı üretmez; yeni API rolü henüz uygulanmamıştır.", "",
+              "overbroad_api bir uygulama yetki profilidir. Firewall kuralı üretmez; canlı API rol denetimleri lab/app.py içindedir.", "",
               "RED → KKBS/OT/SOC/MGMT/DISPLAY, DMZ → APP/OT/Proxmox ve INT → OT doğrudan erişimleri kapalıdır. PostgreSQL 5432 ve indexer 9200 ağlara açılmaz.", "",
               "DNS TCP/UDP 53 ve NTP UDP 123 için her bölgeden yalnız kendi FW ağ geçidine erişim planlanmıştır. Gerçek internet çıkışı bu planda yoktur."]
     (output / "firewall-review.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

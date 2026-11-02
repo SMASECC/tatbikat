@@ -1,6 +1,6 @@
 # Proxmox üzerinde Git'ten kurulum
 
-Kurulum girişi sürümü: **0.3.0-lab.2**.
+Kurulum girişi sürümü: **0.3.0-lab.3**.
 
 Bu giriş Proxmox **VE 9.x / x86-64**, root Shell, BIOS'ta açık VT-x/AMD-V ve ilk kurulumda internet gerektirir. 64 GiB RAM önerilir. İlk kurulumda VM disk deposunda **380 GiB**, kaynakların bulunduğu `/root` dosya sisteminde ayrıca yaklaşık **25 GiB** boş alan kontrol edilir. Bunlar farklı depolarda olabilir; aynı dosya sistemindeyse iki ihtiyacı birlikte karşılayın. VMID 100–170 ve yedi lab ağı mevcut kaynaklarla çakışmamalıdır. Kurulum bunları değiştirmeden önce kontrol eder.
 
@@ -11,7 +11,7 @@ GitHub deposu özel olduğunda Proxmox'un da okuma izni olmalıdır. ChatGPT'nin
 Proxmox web arayüzünde **node → Shell** açın ve root olarak çalıştırın. Aşağıdaki komut **aboneliksiz tatbikat hostu** içindir. Enterprise APT girdileri yedeklenir, imzalı no-subscription kaynağı seçilir. Host yönetim IP'si/fiziksel NIC korunur; yeni özel lab bridge'leri ve VM'ler oluşturulur.
 
 ```bash
-(command -v git >/dev/null || apt-get install -y git) && (test -d /root/KALKAN-1/.git || git clone --branch v0.3.0-lab.2 --single-branch https://github.com/SMASECC/tatbikat.git /root/KALKAN-1) && bash /root/KALKAN-1/install.sh --community-repo
+(command -v git >/dev/null || apt-get install -y git) && (test -d /root/KALKAN-1/.git || git clone --branch v0.3.0-lab.3 --single-branch https://github.com/SMASECC/tatbikat.git /root/KALKAN-1) && bash /root/KALKAN-1/install.sh --community-repo
 ```
 
 Geçerli enterprise aboneliğiniz varsa son `--community-repo` seçeneğini kaldırın. Git paketi kurulamazsa veya depoya erişim reddedilirse lab kurulumu başlamaz; önce Proxmox'un Debian paket kaynaklarını/GitHub erişimini düzeltin. Mevcut `/root/KALKAN-1` dizini otomatik silinmez veya güncellenmez. Başka bir checkout varsa kendi yolunda `bash install.sh --community-repo` çalıştırın. Dizinlerin üzerine ZIP açmayın.
@@ -45,6 +45,6 @@ python3 deploy/kalkan.py credentials
 
 Yerel kaynak testleri gerçek Proxmox kurulumu değildir. Bu değişiklik bulut ortamında yerel testler ve Ansible sözdizimiyle sınanmıştır; fiziksel host üzerinde VM/cloud-init/Ligolo/Wazuh zinciri ve yeniden açılış provası tamamlanmadan tam lab kabulü iddia edilmez.
 
-Bu sürümün yerel doğrulamasında 15 kontrol grubu tamamlandı; 89 Python testinden 88'i geçti, root test denetleyicisi gerektiren biri atlandı. Üç Ansible playbook sözdizimi ve sekiz VM envanteri doğrulandı. Ligolo resmi checksum listesinde seçilen ikili adları doğrulandı. Ubuntu/Kali/Wazuh indirme adreslerinin canlı kontrolü bu bulut ortamının ağ politikası nedeniyle tamamlanamadı; fiziksel kurulumun indirme aşaması bu erişimleri doğrulayacak ve hata varsa VM/ağ oluşturmadan duracaktır.
+Bu sürümün yerel doğrulamasında 15 kontrol grubu tamamlandı; 89 Python testinden 88'i geçti, root test denetleyicisi gerektiren biri atlandı. Güncel full_lab Ansible playbook sözdizimi ve sekiz VM envanteri doğrulandı. Ligolo resmi checksum listesinde seçilen ikili adları doğrulandı. Ubuntu/Kali/Wazuh indirme adreslerinin canlı kontrolü bu bulut ortamının ağ politikası nedeniyle tamamlanamadı; fiziksel kurulumun indirme aşaması bu erişimleri doğrulayacak ve hata varsa VM/ağ oluşturmadan duracaktır.
 
 İlk kurulum Ubuntu cloud, Kali cloud, GitHub/Ligolo, Wazuh, Debian/Ubuntu/Kali APT aynaları ve PyPI'ye erişir. İnternet çıkışı kısıtlı ağlarda indirme yönlendirmeleri ve imzalı paket depoları da izinli olmalıdır. ZIP/Git kaynak paketi tam çevrimdışı kurulum değildir.

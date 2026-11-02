@@ -1,7 +1,5 @@
-# Backend kaynak durumu
+# Backend kaynakları
 
-starter-v0.1 çalışan Python/SQLite başlangıç paketidir. Kaynakları özgün yapısıyla korunmuştur. Kendi testleri ve önceki frontend projeksiyonu bu dizinde çalıştırılabilir.
+Güncel uygulama `lab/`, Proxmox kurulumu ve işletim komutları `deploy/` dizinindedir. Kurulum için [Git rehberini](../docs/git-install.md) kullanın.
 
-Güncel frontend frontend/ dizinindedir. Starter içindeki web/ kopyası önceki sürümdür. Son frontend'in canlı backend bağlantısı, FastAPI/PostgreSQL geçişi ve DMZ servis hesabı eşlemesi henüz tamamlanmamıştır.
-
-Yeni sürüm next-api/ altında tanımlanan sözleşmeye göre geliştirilecektir. İki frontend sürümü kendiliğinden birleştirilmemektedir.
+`starter-v0.1` önceki model sürümüdür. Güncel canlı frontend derleyicisinin kullandığı veri adaptörü, dağıtımın kullandığı uygulama Wazuh kuralları ve model regresyon testleri bu kaynaklara bağlıdır. Bu nedenle dizinin tamamı kullanılmayan arşiv sayılmaz. İçindeki ayrı sunucu ve frontend, sekiz VM'li labın kurulum girişi değildir.

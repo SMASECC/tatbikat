@@ -1,8 +1,0 @@
-{
-  "status": "image_hashes_not_selected",
-  "artifacts": [
-    {"name": "ubuntu-24.04-cloud-image", "url": null, "sha256": null, "purpose": "Ubuntu VM template"},
-    {"name": "kali-image", "url": null, "sha256": null, "purpose": "Kali template"},
-    {"name": "dmz-vulnerable-service", "version": null, "sha256": null, "purpose": "Selected lab service"}
-  ]
-}

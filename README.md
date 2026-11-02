@@ -1,6 +1,6 @@
 # KALKAN-1 tam lab kaynak paketi
 
-**Sürüm: 0.3.0-lab.2**
+**Sürüm: 0.3.0-lab.3**
 
 Bu teslim güncel arayüzü, bağımsız OT modelini, gerçek Linux erişim zincirini, mavi takım araçlarını, Wazuh kurallarını ve Proxmox/Ansible kurulum otomasyonunu içermektedir. Kaynak ve yerel test paketi hazırlanmıştır. Sekiz VM'nin gerçek Proxmox/Wazuh üzerindeki tam kurulumu bu geliştirme ortamında doğrulanmamıştır. Kurulum kabul araçları bunu kullanıcı ortamında sınamaktadır.
 
@@ -25,7 +25,6 @@ Rehber; Windows'tan dosya aktarımı, temiz Proxmox hazırlığı, otomatik kayn
 | frontend | Onaylı görsel kaynaklar. lab/build_frontend.py güncel kaynaklara canlı veri adapter'ı ekler. |
 | docs/scenarios, scenarios/red-blue | Aşama, önkoşul, kayıt kaynağı, IOC/TTP ve müdahale sözleşmeleri. |
 | backend/starter-v0.1 | Geçmiş model sürümü ve uygulama Wazuh kuralları. Ana canlı dağıtım bu dizinden yapılmaz. |
-| backend/next-api | Önceki FastAPI/PostgreSQL genişleme önerisi. Bu teslimde uygulanmış teknoloji sayılmaz. |
 
 ## Seçilen çalışma mimarisi
 
@@ -68,4 +67,4 @@ Bu komut uzak lab kurmaz. Onaylı frontend'i ve canlı adapter'ı derler; kaynak
 
 `dist/live/index.html` yalnız lab backend'i üzerinden sunulur. `dist/frontend/index.html` bağımsız görsel model arşividir. Ayrı bilgisayarlarda canlı gösterim için bağımsız HTML dosyaları açılmaz; ortak HTTPS uygulamasına bağlanılır.
 
-Git geçmişi kalkan-1.bundle içindedir. Uzak depo bağlanmamıştır. .local, anahtarlar, cache ve olay kanıtları Git'e eklenmez. Eski altyapı planı docs/infrastructure-requirements.md içinde korunmuştur; bu teslimin teknoloji ve kurulum kararları bu README ve teslim rehberidir.
+Kaynaklar ve geliştirme geçmişi [SMASECC/tatbikat](https://github.com/SMASECC/tatbikat) Git deposundadır. Sürümler Git etiketleriyle sabitlenir. `scripts/package_repo.py` ile ayrıca üretilen dağıtım arşivi taşınabilir Git bundle içerir; normal Git checkout'unda bundle dosyası bulunması gerekmez. `.local`, anahtarlar, cache ve olay kanıtları Git'e eklenmez. Eski altyapı planı `docs/infrastructure-requirements.md` içinde başvuru kaynağı olarak korunmuştur; güncel kurulum yolu [Git kurulum rehberidir](docs/git-install.md).

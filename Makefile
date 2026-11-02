@@ -1,7 +1,7 @@
 PYTHON ?= python3
 ANSIBLE_PLAYBOOK ?= $(if $(wildcard .venv/bin/ansible-playbook),$(abspath .venv/bin/ansible-playbook),ansible-playbook)
 
-.PHONY: check plan scenario-plan frontend backend-check infra-syntax preflight base-os
+.PHONY: check plan scenario-plan frontend backend-check infra-syntax preflight
 check:
 	$(PYTHON) scripts/check.py
 plan:
@@ -14,9 +14,6 @@ frontend:
 backend-check:
 	cd backend/starter-v0.1 && $(PYTHON) -m unittest discover -s tests -v
 infra-syntax: plan
-	cd infra && $(ANSIBLE_PLAYBOOK) playbooks/preflight.yml --syntax-check
-	cd infra && $(ANSIBLE_PLAYBOOK) playbooks/base-os.yml --syntax-check
-preflight: plan
-	cd infra && $(ANSIBLE_PLAYBOOK) playbooks/preflight.yml -e @../.local/site.yml
-base-os: plan
-	cd infra && $(ANSIBLE_PLAYBOOK) playbooks/base-os.yml -e @../.local/site.yml
+	$(PYTHON) scripts/check_ansible.py --ansible-playbook "$(ANSIBLE_PLAYBOOK)"
+preflight:
+	bash install.sh --preflight-only

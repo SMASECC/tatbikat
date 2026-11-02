@@ -1,12 +1,14 @@
 # KALKAN-1 · Backend başlangıç paketi v0.1.0
 
+Bu dizin önceki modelin regresyon ve ortak adaptör kaynaklarıdır. Aşağıdaki yerel model komutları sekiz VM'li canlı lab kurulumu değildir. Güncel Proxmox kurulumu için [Git kurulum rehberini](../../docs/git-install.md) kullanın; eski tek-VM systemd/Ansible dosyaları kaldırılmıştır.
+
 30 Ekim 2026
 
 Son onaylanan dört bölgeli frontend, ortak bir Python sunucusuna bağlandı. Kırmızı takım komutları sunucudaki konum/görev kayıtlarını, HMI ölçümünü, PLC hedeflerini ve paket dağıtımını değiştirir. Mavi takım Wazuh alarmlarını inceler, oturumu iptal eder, uzak yazmayı kilitler, güvenilir kaydı geri yükler ve hizmetin kararlı olduğunu doğrular.
 
 Bu sürüm uygulama seviyesinde çalışan bir laboratuvar emülasyonudur. Gerçek bir açığı sömürmez, işletim sistemi ele geçirmez ve fiziksel PLC'ye komut göndermez. Kırmızı takım için ele geçirilmiş bir komuta oturumunun etkileri kontrollü lab API'siyle temsil edilir. Veri değişiklikleri, proses tepkisi, kalıcı kayıt, rol denetimi ve API trafiği çalışan backend'dedir. Wazuh kendi manager/agent kurulumu üzerinden gerçek JSON günlüklerini alır; frontend, Wazuh alarmı varmış gibi veri üretmez.
 
-Bu paket, eski `KALKAN-1_v1.2.0_Proxmox_Ansible.zip` içindeki S01–S15 mimarisine otomatik geçiş yapmaz. Güncel frontend'in 10 adımına yönelik ayrı bir başlangıç hizmetidir. Eski dosyaları, VM ağlarını ve Proxmox yapılandırmasını değiştirmez. Ansible örneğinin hedef VM'sini uygulamadan önce kendi envanterinle eşleştir.
+Bu model, eski `KALKAN-1_v1.2.0_Proxmox_Ansible.zip` içindeki S01–S15 mimarisine otomatik geçiş yapmaz. Önceki frontend'in 10 adımına yönelik başlangıç hizmetidir; VM ağlarını veya Proxmox yapılandırmasını değiştirmez.
 
 ## 1. İlk çalıştırma
 
@@ -97,7 +99,7 @@ Akış: **backend → tek satırlık JSON günlük → yerel Wazuh agent → man
 
 ### Agent tarafı
 
-Systemd/Ansible kurulumunda günlük yolu `/var/log/kalkan-1-backend/events.jsonl` olur. `wazuh/localfile.xml` içeriğini agent'ın `/var/ossec/etc/ossec.conf` dosyasında bir `<ossec_config>` öğesinin **içine** ekle. Mevcut dosyayı bu parçayla tamamen değiştirme. Aynı yolu ikinci kez ekleme.
+Eski modelin örnek günlük yolu `/var/log/kalkan-1-backend/events.jsonl` olarak seçilmişti. Bu modeli ayrıca çalıştırıyorsanız `wazuh/localfile.xml` içindeki konumu gerçek günlük yoluyla eşleştirin ve agent'ın `/var/ossec/etc/ossec.conf` dosyasında bir `<ossec_config>` öğesinin **içine** ekleyin. Güncel tam labda günlük toplama `lab/node_setup.py` ile otomatik yapılandırılır. Mevcut dosyayı bu parçayla tamamen değiştirmeyin veya aynı yolu ikinci kez eklemeyin.
 
 ```xml
 <localfile>
@@ -181,25 +183,11 @@ Yeni `run_id` oluşur; eski olaylar ve SQLite kayıtları silinmez. Red ekibi ye
 
 **Gösterim seçimi:** Tüm etki zincirini göstereceksen her adımın Wazuh alarmını inceleyip containment'i son etki adımında uygula. Erken müdahale denemesinde ilk alarmdan sonra containment uygula; sonraki red adımlarının reddedildiğini göster. Sonra yeni tur aç. Erken müdahaleden sonra saldırının sessizce devam etmesi bu pakette beklenen davranış değildir.
 
-## 6. Proxmox / Ansible başlangıç dağıtımı
+## 6. Güncel Proxmox kurulumu
 
-Mevcut Proxmox'ta hazırlanmış Linux lab VM'sine dağıtım örneği eklenmiştir. Playbook VM oluşturmaz, bridge/VLAN/firewall değiştirmez ve Wazuh kurmaz. `deploy/inventory.example.yml` adresleri örnektir. Önce SSH erişimini ve hedefin doğru lab VM'si olduğunu kontrol et. Ansible denetleyicisinde ansible-core ve hedefte Python 3 gerekir.
+Bu dizin, yerel model regresyon testleri ve güncel derlemenin kullandığı ortak kaynaklar için korunmaktadır. Eski tek-VM Ansible playbook'u, servis tanımı ve örnek envanteri kaldırılmıştır. Sekiz VM'li güncel labı bu dizinden dağıtmayın.
 
-```bash
-cp deploy/inventory.example.yml deploy/inventory.yml
-# inventory.yml içindeki hedef IP ve kullanıcıyı düzenle.
-ansible-inventory -i deploy/inventory.yml --graph
-ansible-playbook -i deploy/inventory.yml deploy/deploy.yml
-```
-
-Hizmet: `kalkan-backend.service`; kaynak: `/opt/kalkan-1-backend`; özel durum/anahtarlar: `/var/lib/kalkan-1-backend`; agent günlüğü: `/var/log/kalkan-1-backend/events.jsonl`; varsayılan dinleme: `127.0.0.1:8088`. Önceki paketle aynı kaynak/durum klasörü kullanılmaz.
-
-```bash
-sudo systemctl status kalkan-backend
-sudo journalctl -u kalkan-backend -n 50 --no-pager
-```
-
-Kurulum anahtarını yönetim makinesinde görüntüleme örneği: `sudo cat /var/lib/kalkan-1-backend/credentials.json`. Çıktı kurulum sırrıdır; takım katılımcılarına yalnız ilgili rolün değerini ver. Hizmet yeniden dağıtıldığında mevcut anahtar dosyası üzerine yazılmaz.
+Proxmox hostunda proje kökündeki `install.sh` kullanılır. Git erişimi, host gereksinimleri, tek komut ve kabul adımları [güncel kurulum rehberindedir](../../docs/git-install.md).
 
 ## 7. Kalıcı durum, olaylar ve test
 
@@ -211,7 +199,7 @@ python3 -m unittest discover -s tests -v
 
 Bu paket hazırlanırken 18 test ve Node ile 28 frontend projeksiyon kontrolü geçti. Testler rol ayrımını, kaynak verisinin ekrana aktarımını, komutların proses etkisini, kesintide donmayı, containment sonrası engellemeyi, geri yükleme ve 8 saniye kararlılık koşulunu, gerçek HTTP üzerinden CLI akışını kapsar. XML/örnek alan eşleşmesi yerelde kontrol edildi. Wazuh manager/agent, Ansible hedefi ve Proxmox bu çalışma ortamında mevcut olmadığından **gerçek Wazuh alarm üretimi ve VM dağıtımı burada çalıştırılmadı**; kurulumdaki kabul testi yukarıdadır.
 
-Klasörler: `engine.py` proses/durum/kayıt; `server.py` HTTP ve rol denetimi; `tools/red.py` kırmızı takım; `tools/blue.py` mavi takım; `tools/watch_wazuh.py` gerçek alarm okuyucu; `wazuh/` kurallar ve test olayları; `web/frontend-approved.html` onaylanan taslak; `web/index.html` backend'e bağlı sürüm; `tools/build_frontend.py` bağlantı adaptörü; `deploy/` dağıtım örnekleri; `tests/` kabul kontrolleri.
+Klasörler: `engine.py` proses/durum/kayıt; `server.py` HTTP ve rol denetimi; `tools/red.py` model kırmızı takımı; `tools/blue.py` model mavi takımı; `tools/watch_wazuh.py` uygulama alarm okuyucu; `wazuh/` kurallar ve test olayları; `web/frontend-approved.html` önceki onaylı taslak; `web/index.html` model backend'ine bağlı sürüm; `tools/build_frontend.py` bağlantı adaptörü; `tests/` model regresyon kontrolleri. Güncel canlı kaynaklar proje kökündeki `lab/`, `frontend/` ve `deploy/` dizinlerindedir.
 
 ## 8. Sonraki geliştirme için sınır
 
